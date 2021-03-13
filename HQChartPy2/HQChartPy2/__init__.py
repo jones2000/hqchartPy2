@@ -8,7 +8,7 @@ with open(dirname(__file__) + '/pkg_info.json') as fp:
 
 __version__ = _info['version']
 
-from HQChartPy2.HQChartPy2 import LoadAuthorizeInfo, Run, GetAuthorizeInfo, GetVersion
+from HQChartPy2.HQChartPy2 import LoadAuthorizeInfo, Run, GetAuthorizeInfo, GetVersion, SetLog
 
 
 

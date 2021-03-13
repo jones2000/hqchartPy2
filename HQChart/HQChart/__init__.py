@@ -8,8 +8,8 @@ with open(dirname(__file__) + '/pkg_info.json') as fp:
 
 __version__ = _info['version']
 
-from hqchart.hqchartpy2_fast import PERIOD_ID, IHQData, FastHQChart
-from hqchart.hqchartpy2_pandas import HQChartPy2Helper
+from HQChart.hqchartpy2_fast import PERIOD_ID, IHQData, FastHQChart
+from HQChart.hqchartpy2_pandas import HQChartPy2Helper
 
 
 

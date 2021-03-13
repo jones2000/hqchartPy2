@@ -4,7 +4,7 @@
 ##
 ##
 ##########################################################################################################
-from hqchart import IHQData, PERIOD_ID, FastHQChart, HQChartPy2Helper
+from HQChart import IHQData, PERIOD_ID, FastHQChart, HQChartPy2Helper
 import json
 import time
 import numpy as np 
@@ -31,6 +31,7 @@ class TushareConfig():
 ##########################################################################################
 class TushareHQChartData(IHQData) :
     def __init__(self, token, startDate, endDate):
+        IHQData.__init__(self)
         ts.set_token(token) 
         self.TusharePro = ts.pro_api()
         self.StartDate=startDate
@@ -87,14 +88,16 @@ class TushareHQChartData(IHQData) :
         if (IHQData.IsSHSZIndex(symbol)) :
             fq=None
             try:
-                print("[TushareHQChartData::GetKLineAPIData] 指数 ts.pro_bar(ts_code={0}, adj={1}, start_date={2}, end_date={3}, freq={4}, asset='I')".format(symbol, fq, startDate, endDate, freq))
+                if (self.IsOutLog==True) :
+                    print("[TushareHQChartData::GetKLineAPIData] 指数 ts.pro_bar(ts_code={0}, adj={1}, start_date={2}, end_date={3}, freq={4}, asset='I')".format(symbol, fq, startDate, endDate, freq))
                 df = ts.pro_bar(ts_code=symbol, adj=fq, start_date=str(startDate), end_date=str(endDate),freq=freq, asset='I')
             except Exception as e:
                 print('[TushareHQChartData::GetKLineAPIData] Error. throw exception {0},'.format(e))
                 return { "error":str(e) }
         else :
             try :
-                print("[TushareHQChartData::GetKLineAPIData] 股票 ts.pro_bar(ts_code={0}, adj={1}, start_date={2}, end_date={3}, freq={4})".format(symbol, fq, startDate, endDate, freq))
+                if (self.IsOutLog==True) :
+                    print("[TushareHQChartData::GetKLineAPIData] 股票 ts.pro_bar(ts_code={0}, adj={1}, start_date={2}, end_date={3}, freq={4})".format(symbol, fq, startDate, endDate, freq))
                 df = ts.pro_bar(ts_code=symbol, adj=fq, start_date=str(startDate), end_date=str(endDate),freq=freq)
                 # df = self.TusharePro.daily(ts_code=symbol, start_date='20200101', end_date='20201231')
             except Exception as e:
@@ -102,7 +105,10 @@ class TushareHQChartData(IHQData) :
                 return { "error":str(e) }
 
         df=df.sort_index(ascending=False) # 数据要降序排
-        print(df)
+        if (self.IsOutLog==True) :
+            print("----------------------------")
+            print(df)
+            print("----------------------------")
 
         cacheData={}
         if (period in (0,1,2,3,9)) :
@@ -141,8 +147,9 @@ class TushareHQChartData(IHQData) :
         cacheData["amount"]=np.array(df["amount"]).tolist()
 
 
-        log="K线:{0} - period={1} right={2} count={3} date=[{4}, {5}]".format(symbol,period,right,dataCount, startDate, endDate)
-        print(log)
+        if (self.IsOutLog==True) :
+            log="[TushareHQChartData::GetKLineAPIData] K线:{0} - period={1} right={2} count={3} date=[{4}, {5}]".format(symbol,period,right,dataCount, startDate, endDate)
+            print(log)
 
         return cacheData
 

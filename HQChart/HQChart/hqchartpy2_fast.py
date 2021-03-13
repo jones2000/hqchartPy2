@@ -1,7 +1,7 @@
 import sys
 import os
 
-from HQChartPy2 import LoadAuthorizeInfo, Run, GetAuthorizeInfo, GetVersion
+from HQChartPy2 import LoadAuthorizeInfo, Run, GetAuthorizeInfo, GetVersion, SetLog
 import platform
 import datetime
 import requests     # 网络数据下载
@@ -35,6 +35,8 @@ class PERIOD_ID:
 #
 ############################################################################################
 class IHQData(object):
+    def __init__(self) :
+        self.IsOutLog=False   # 是否输出日志
 
     # K线数据
     def GetKLineData(self, symbol, period, right, jobID):
@@ -96,48 +98,14 @@ class IHQData(object):
 
     # 系统指标
     def GetIndexScript(self,name,callInfo, jobID):
-        if (name=="MA") :
-            indexScript = {
-                # 系统指标名字
-                "Name":name,
-                "Script":'''
-                T1:MA(C,M1);
-                T2:MA(C,M2);
-                T3:MA(C,M3);
-                ''',
-                # 脚本参数
-                "Args": [ { "Name":"M1", "Value":15 }, { "Name":"M2", "Value":20 }, { "Name":"M3", "Value":30} ]
-            }
-            return indexScript
-        elif (name=="KDJ"):
-            indexScript = {
-                # 系统指标名字
-                "Name":name,
-                "Script":'''
-                RSV:=(CLOSE-LLV(LOW,N))/(HHV(HIGH,N)-LLV(LOW,N))*100;
-                K:SMA(RSV,M1,1);
-                D:SMA(K,M2,1);
-                J:3*K-2*D;
-                ''',
-                # 脚本参数
-                "Args": [ { "Name":"N", "Value":9 }, { "Name":"M1", "Value":3 }, { "Name":"M2", "Value":3} ]
-            }
-            return indexScript
-        elif (name=="MACD"):
-            indexScript = {
-                # 系统指标名字
-                "Name":name,
-                "Script":'''
-                DIF:EMA(CLOSE,SHORT)-EMA(CLOSE,LONG);
-                DEA:EMA(DIF,MID);
-                MACD:(DIF-DEA)*2,COLORSTICK;
-                ''',
-                # 脚本参数
-                "Args": [ { "Name":"SHORT", "Value":12 }, { "Name":"LONG", "Value":26 }, { "Name":"MID", "Value":9 } ]
-            }
-            return indexScript
-        
-        return None
+        if (self.IsOutLog==True):
+            print("[IHQData::GetIndexScript] name={0}, callInfo={1}, jobID={2}".format(name,callInfo, jobID) )
+
+        result=SystemIndex.Get(name)
+
+        if (self.IsOutLog==True):
+            print("[IHQData::GetIndexScript] 系统指标[{0}]={1}".format(name,result) )
+        return result
 
     # 星期五
     @staticmethod 
@@ -175,6 +143,10 @@ class FastHQChart :
     def GetVersion():
         dllVersion=GetVersion()
         return "{0}.{1}".format(int(dllVersion/100000), (dllVersion%100000))
+    
+    @staticmethod
+    def SetLog(value):
+        return SetLog(value)
 
     # 初始化
     @staticmethod 
@@ -251,3 +223,54 @@ class FastHQChart :
             print("获取测试账户请求异常")
 
         return None
+
+
+
+#########################################################
+## 内置系统指标
+##
+##
+#########################################################
+
+class SystemIndex:
+    MAP_INDEX= {
+        "MA":{ 
+            "Name":"MA",
+            "Script":'''
+            T1:MA(C,M1);
+            T2:MA(C,M2);
+            T3:MA(C,M3);
+            ''',
+            "Args": [ { "Name":"M1", "Value":15 }, { "Name":"M2", "Value":20 }, { "Name":"M3", "Value":30} ]
+            },
+
+        "KDJ":{
+            "Name":"KDJ",
+            "Script":'''
+            RSV:=(CLOSE-LLV(LOW,N))/(HHV(HIGH,N)-LLV(LOW,N))*100;
+            K:SMA(RSV,M1,1);
+            D:SMA(K,M2,1);
+            J:3*K-2*D;
+            ''',
+            "Args": [ { "Name":"N", "Value":9 }, { "Name":"M1", "Value":3 }, { "Name":"M2", "Value":3} ]
+            },
+
+        "MACD":{
+            "Name":"MACD",
+            "Script":'''
+            DIF:EMA(CLOSE,SHORT)-EMA(CLOSE,LONG);
+            DEA:EMA(DIF,MID);
+            MACD:(DIF-DEA)*2,COLORSTICK;
+            ''',
+            # 脚本参数
+            "Args": [ { "Name":"SHORT", "Value":12 }, { "Name":"LONG", "Value":26 }, { "Name":"MID", "Value":9 } ]
+            }   
+    }
+
+    @staticmethod
+    def Get(name) :
+        if (name in SystemIndex.MAP_INDEX.keys()):
+            value=SystemIndex.MAP_INDEX[name]
+            return json.dumps(value)
+        else:
+            return None

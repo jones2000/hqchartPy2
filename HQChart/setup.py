@@ -12,7 +12,7 @@ setup(
     description = "HQChartPy2 C++",
     license = "Apache License 2.0",
     keywords = "HQChart HQChartPy2",
-    url = "https://github.com/jones2000/HQChart",
+    url = "https://github.com/jones2000/hqchartPy2",
 
     install_requires=['requests', 'pandas', 'numpy', "hqchartPy2"],
 

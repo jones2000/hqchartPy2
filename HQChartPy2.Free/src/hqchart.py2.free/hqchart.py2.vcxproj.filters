@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="HQChart.Complier.Source">
+      <UniqueIdentifier>{1ae5db79-5675-43cb-a458-22f150cbb197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HQChart.Complier.Py">
+      <UniqueIdentifier>{daadff59-9a50-4dc6-8301-f4e1c2a52850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HQChart.Complier.ToJson">
+      <UniqueIdentifier>{c710f3ef-a7e6-48e0-bbc4-91f080be096d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\CalendarHelper.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.Complier.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.data.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.Execute.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.KLineData.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.Log.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\zwldef.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
+    <ClInclude Include="hqchart.complier.py.h">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClInclude>
+    <ClInclude Include="userhelper.h">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.ToJson\HQChart.OutVarToJson.h">
+      <Filter>HQChart.Complier.ToJson</Filter>
+    </ClInclude>
+    <ClInclude Include="hqchart.complier.py.authorizeInfo.h">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClInclude>
+    <ClInclude Include="hqchart.complier.py.runconfig.h">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClInclude>
+    <ClInclude Include="hqchart.complier.py.callbackfunction.h">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClInclude>
+    <ClInclude Include="hqchart.complier.py.callbackdata.h">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.Interface.Data.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\CalendarHelper.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Algorithm.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Algorithm2.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Algorithm3.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Algorithm4.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Call.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Complier.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.data.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.DataCreateFactory.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Execute.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.HistoryDataCache.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.KLineData.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Log.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.ParseExcept.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.ScriptLibrary.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="hqchart.complier.py.cpp">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClCompile>
+    <ClCompile Include="hqchart.complier.py.interface.cpp">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Algorithm5.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.ToJson\HQChart.OutVarToJson.cpp">
+      <Filter>HQChart.Complier.ToJson</Filter>
+    </ClCompile>
+    <ClCompile Include="hqchart.complier.py.authorizeInfo.cpp">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Custom.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="hqchart.complier.py.runconfig.cpp">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClCompile>
+    <ClCompile Include="hqchart.complier.py.callbackfunction.cpp">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClCompile>
+    <ClCompile Include="hqchart.complier.py.callbackdata.cpp">
+      <Filter>HQChart.Complier.Py</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="setup.py" />
+  </ItemGroup>
+</Project>

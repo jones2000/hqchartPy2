@@ -1,0 +1,474 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">  
+<head>  
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+
+<title>HQChartPy2指标测试</title>  
+    <!-- 加载资源 -->
+    <link rel="stylesheet" href="https://opensource2.zealink.com/hqweb/jscommon/umychart.resource/css/tools.css" />
+    <link rel="stylesheet" href="./umychart.resource/font/iconfont.css" />
+</head>  
+<body>
+    <div id="kline" style="width: 900px;height:400px;position: relative;"></div>
+    <div>
+        <span id='button_day' class="btn-style">日线</span>
+        <span id='button_week' class="btn-style">周线</span>
+        <span id='button_month' class="btn-style">月线</span>
+        <span id='button_year' class="btn-style">年线</span>
+
+        <span id='button_1m' class="btn-style">1分钟</span>
+        <span id='button_5m' class="btn-style">5分钟</span>
+        <span id='button_15m' class="btn-style">15分钟</span>
+        <span id='button_30m' class="btn-style">30分钟</span>
+
+        <span id='button_right' class="btn-style">不复权</span>
+        <span id='button_right_1' class="btn-style">前复权</span>
+        <span id='button_right_2' class="btn-style">后复权</span>
+
+        <span id='button_symbol' class="btn-style">切换股票</span>
+        <span id='button_changeindex' class="btn-style">切换指标</span>
+    </div>
+
+    <script src="https://opensource2.zealink.com/hqweb/demo/content/js/jquery.min.js"></script>
+    <script src="https://opensource2.zealink.com/hqweb/demo/content/js/webfont.js"></script>
+    <script src='https://opensource2.zealink.com/hqweb/jscommon/umychart.console.js'></script>     <!-- 日志输出 -->
+    <script src="https://opensource2.zealink.com/hqweb/jscommon/umychart.network.js"></script>     <!-- 网络请求分装 -->
+    <script src="https://opensource2.zealink.com/hqweb/jscommon/umychart.js"></script>             <!-- K线图形 -->
+    <script src="https://opensource2.zealink.com/hqweb/jscommon/umychart.complier.js"></script>    <!-- 麦语言解析执行器 -->
+    <script src="https://opensource2.zealink.com/hqweb/jscommon/umychart.index.data.js"></script>  <!-- 基础指标库 -->
+    <script src="https://opensource2.zealink.com/hqweb/jscommon/umychart.style.js"></script>       <!-- 白色风格和黑色风格配置信息 -->
+    
+    <script>
+
+        //JSConsole.Chart.Log=() =>{}
+        //JSConsole.Complier.Log=()=>{}
+        //MARKET_SUFFIX_NAME.GetMarketStatus = function (symbol)  { return 2; }
+
+        var test_index="D1:=(L+H+C*2)/4;\r\n"+
+"D2:=EMA(D1,14); \r\n"+
+"D3:=(D2-REF(D2,1))/REF(D2,1)*100; \r\n"+
+"保持上涨:IF(D3>=0,D2,DRAWNULL),COLORRED,LINETHICK3; \r\n"+
+"持续下跌:IF(D3<0,D2,DRAWNULL),COLORLIBLUE,LINETHICK3; \r\n"+
+"STICKLINE(CROSS(D3,0),H,L,0,0 ),COLORMAGENTA; \r\n"+
+"STICKLINE(CROSS(D3,0),C,O,3,0 ),COLORMAGENTA; \r\n"+
+"STICKLINE(CROSS(0,D3),C,O,3,0 ),COLORLIBLUE; \r\n"+
+"STICKLINE(CROSS(0,D3),L,H,0,0 ),COLORLIBLUE;\r\n"+
+"DRAWICON(CROSS(D3,0),L-0.2,1);\r\n"+
+"DRAWICON(CROSS(0,D3),H+0.2,2);\r\n"+
+"DRAWTEXT(CROSS(D3,0),L-0.2,'  多头信号'),COLORMAGENTA; \r\n"+
+"DRAWTEXT(CROSS(0,D3),H+0.2,'  空头信号'),COLORLIBLUE;"
+
+var test_index2="D1:=(L+H+C*2)/4;\r\n"+
+"D2:=EMA(D1,14); \r\n"+
+"D3:=(D2-REF(D2,1))/REF(D2,1)*100; \r\n"+
+"保持上涨:IF(D3>=0,D2,DRAWNULL),COLORRED,LINETHICK3; \r\n";
+
+var test_index3="VAR1:=(2*CLOSE+HIGH+LOW+OPEN)/5;\r\n"+
+"高抛: 80;\r\n"+
+"VAR2:=LLV(LOW,34);\r\n"+
+"VAR3:=HHV(HIGH,34);\r\n"+
+"SK: EMA((VAR1-VAR2)/(VAR3-VAR2)*100,13);\r\n"+
+"SD: EMA(SK,3);\r\n"+
+"低吸: 20;\r\n"+
+"强弱分界: 50;\r\n"+
+"VAR4:=IF(CROSS(SK,SD),40,22);\r\n"+
+"VAR5:=IF(CROSS(SD,SK),60,78);\r\n"+
+"卖出: VAR5;\r\n"+
+"买进: VAR4;\r\n"+
+"DRAWICON(CROSS(SD,SK),SD*1.04,1007),COLORGREEN;\r\n"+
+"DRAWICON(CROSS(SK,SD),SK*0.96,1008),COLORYELLOW;"
+
+var test_index4='RSV:=(CLOSE-LLV(LOW,N))/(HHV(HIGH,N)-LLV(LOW,N))*100;\n\
+K:SMA(RSV,M1,1);\n\
+D:SMA(K,M2,1);\n\
+J:3*K-2*D;'
+
+        
+        //简单的把K线控件封装下
+        function KLineChart(divKLine)
+        {
+            this.DivKLine=divKLine;
+            this.Chart=JSChart.Init(divKLine);   //把K线图绑定到一个Div上
+
+            //K线配置信息
+            this.Option= {
+                Type:'历史K线图',   //创建图形类型
+                //Type:'历史K线图横屏',
+                
+                Windows: //窗口指标
+                [
+                    {
+                        Index:'PyAPI',
+                        API: 
+                        {
+                            Name:'TEST',
+                            Script:"T:MA(C,M1);\nT2:MA(C,M2);",
+                            Args:[ { Name:'M1', Value:5 }, { Name:'M2', Value:10} ],
+                            Url:'http://127.0.0.1:8712/api/Run' ,
+                            Version:2
+                        } 
+                    },
+                    {
+                        Index:'PyAPI',
+                        API: 
+                        {
+                            Name:'KDJ',
+                            Script:test_index4,
+                            Args:[ { Name:'N', Value:9}, { Name:'M1', Value:3}, { Name:'M2', Value:3} ],
+                            Url:'http://127.0.0.1:8712/api/Run' ,
+                            Version:2
+                        } 
+                    },
+                ], 
+
+                
+                Symbol:'000001.sz',
+                IsApiPeriod:true,
+                IsAutoUpdate:false,       //是自动更新数据
+                AutoUpdateFrequency:10000,   //数据更新频率
+    
+                IsShowRightMenu:false,          //右键菜单
+                //CorssCursorTouchEnd:true,
+                //IsCorssOnlyDrawKLine:true,
+    
+                KLine:  //K线设置
+                {
+                    DragMode:1,                 //拖拽模式 0 禁止拖拽 1 数据拖拽 2 区间选择
+                    Right:0,                    //复权 0 不复权 1 前复权 2 后复权
+                    Period:0,                   //周期 0 日线 1 周线 2 月线 3 年线 
+                    MaxReqeustDataCount:1000,   //数据个数
+                    MaxRequestMinuteDayCount:20, //分钟数据获取几天数据  默认取5天数据
+                    PageSize:100,               //一屏显示多少数据
+                    //Info:["互动易","大宗交易",'龙虎榜',"调研","业绩预告","公告"],       //信息地雷
+                    IsShowTooltip:true,                 //是否显示K线提示信息
+                    DrawType:0,      //K线类型 0=实心K线柱子 1=收盘价线 2=美国线 3=空心K线柱子 4=收盘价面积图
+                    //FirstShowDate:20161201,
+                    KLineDoubleClick:false, //禁止双击弹框
+                    RightSpaceCount:5,
+                    ZoomType:1,
+                    StepPixel:10,
+                    //DataWidth:5
+                    ShowKLine:false,
+                },
+
+                Listener:
+                {
+                    //KeyDown:false,
+                    //Wheel:false
+                },
+
+                EnableFlowCapital:
+                {
+                    BIT:true
+                },
+    
+                KLineTitle: //标题设置
+                {
+                    IsShowName:true,       //不显示股票名称
+                    IsShowSettingInfo:true //不显示周期/复权
+                },
+    
+                Border: //边框
+                {
+                    Left:1,         //左边间距
+                    Right:1,       //右边间距
+                    Bottom:50,      //底部间距
+                    Top:25          //顶部间距
+                },
+
+                OverlayIndex: //叠加指标设置
+                [
+                    //{Index:'RSI', Windows:1 },
+                    //{Windows:0, IndexName:"指标ID", Name:"自定义指标", Script:"T:MA(O,20);", Identify:"guid_66990"}
+                ],
+                
+                Frame:  //子框架设置
+                [
+                    { SplitCount:6,StringFormat:0, IsShowLeftText:false },
+                    { SplitCount:3,StringFormat:0, IsShowLeftText:false },
+                    { SplitCount:2,StringFormat:0, IsShowLeftText:false }
+                ],
+
+                ExtendChart:    //扩展图形
+                [
+                    //{Name:'KLineTooltip' }  //手机端tooltip
+                ],
+                
+            };
+                 
+            this.Create=function()  //创建图形
+            {
+                var self=this;
+                $(window).resize(function() { self.OnSize( ); });    //绑定窗口大小变化事件
+                this.OnSize();  //让K线全屏
+
+                this.Option.NetworkFilter=(data, callback) =>{ this.NetworkFilter(data, callback); }; //绑定网络协议回调
+                this.Chart.SetOption(this.Option);  //设置K线配置
+            }
+
+            this.NetworkFilter=function(data, callback)
+            {
+                console.log('[NetworkFilter] data', data);
+                switch(data.Name)
+                {
+                    case 'APIScriptIndex::ExecuteScript':               //远程指标               
+                        this.ExecuteScript(data, callback);
+                        break;
+
+                    case 'KLineChartContainer::RequestHistoryData':                 //日线全量数据下载
+                        this.RequestHistoryData(data,callback);
+                        break;
+
+                    case 'KLineChartContainer::ReqeustHistoryMinuteData':           //分钟全量数据下载
+                        this.RequestHistoryMinuteData(data, callback);
+                        break;
+
+                    case 'KLineChartContainer::RequestFlowCapitalData':             //流通股本
+                        this.RequestFlowCapitalData(data,callback);
+                        break;
+                }
+            }
+
+
+            this.RequestHistoryMinuteData=function(data, callback)
+            {
+                data.PreventDefault=true;
+                var self=this;
+                var symbol=data.Request.Data.symbol;
+                var period=data.Request.Data.period;
+                var right=data.Request.Data.right;
+                var dayCount=data.Self.MaxReqeustDataCount;
+                var url="http://127.0.0.1:8712/api/MinuteKLine";
+
+                var postData={ Right:right, Period:period, Symbol:symbol };
+
+                var postData={ Right:right, Period:period, Symbol:symbol };
+
+                $.ajax({
+                    url: url,
+                    data:JSON.stringify(postData),
+                    contentType: "application/json",
+                    type:"post",
+                    dataType: "json",
+                    async:true,
+                    success: (recvData)=>
+                    {
+                        this.RecvHistoryMinuteData(recvData, data, callback);
+                    },
+                    error:(request)=>
+                    {
+                        //self.RecvError(request,RECV_DATA_TYPE.DERIVATIVE_DATA);
+                    }
+                });
+            }
+
+            this.RecvHistoryMinuteData=function(recvData, data, callback)   //接收历史分钟数据
+            {
+                var hqChartData=recvData
+                console.log("[KLineChart::RecvHistoryMinuteData] hqChartData", hqChartData);
+                callback(hqChartData);
+            }
+
+            this.RequestHistoryData=function(data,callback)
+            {
+                data.PreventDefault=true;
+                var self=this;
+                var symbol=data.Request.Data.symbol;
+                var period=data.Request.Data.period;
+                var right=data.Request.Data.right;
+                var dayCount=data.Self.MaxReqeustDataCount;
+                var url="http://127.0.0.1:8712/api/DayKLine";
+
+
+                var postData={ Right:right, Period:period, Symbol:symbol };
+
+                $.ajax({
+                    url: url,
+                    data:JSON.stringify(postData),
+                    contentType: "application/json",
+                    type:"post",
+                    dataType: "json",
+                    async:true,
+                    success: (recvData)=>
+                    {
+                        this.RecvHistoryData(recvData, data, callback);
+                    },
+                    error:(request)=>
+                    {
+                        //self.RecvError(request,RECV_DATA_TYPE.DERIVATIVE_DATA);
+                    }
+                });
+            }
+
+            this.RecvHistoryData=function(recvData, data, callback)   //接收历史分钟数据
+            {
+                var hqChartData=recvData
+                console.log("[KLineChart::RecvHistoryData] hqChartData", hqChartData);
+                callback(hqChartData);
+            }
+
+            this.RequestFlowCapitalData=function(data,callback)
+            {
+                data.PreventDefault=true;
+                var hqChartData={code:0, stock:[]}; //如果没有数据就填空
+                callback(hqChartData);
+            }
+
+            this.ExecuteScript=function(data,callback)
+            {
+                data.PreventDefault=true;
+
+                var symobl=data.Request.Data.symbol;
+                var period=data.Request.Data.period;
+                var right=data.Request.Data.right;
+                var script=data.Request.Data.script;
+                var dateRange=data.Request.Data.DateRange;
+                var args=data.Request.Data.args;
+                
+                var url="http://127.0.0.1:8712//api/Run";
+                var postData=
+                {  
+                    Symbol:symobl,        //股票代码
+                    Script:script,        //脚本
+                    Period:period,        //周期
+                    Right:right,          //复权
+                    Args:[]
+                };
+                if (args && Array.isArray(args)) 
+                {
+                    for(var i=0;i<args.length;++i)
+                    {
+                        var item=args[i];
+                        postData.Args.push({ Name:item.name, Value:item.value });
+                    }
+                }
+                       
+                
+                $.ajax({
+                    url: url,
+                    data:JSON.stringify(postData),
+                    contentType: "application/json",
+                    type:"post",
+                    dataType: "json",
+                    async:true,
+                    success: (recvData)=>
+                    {
+                        this.RecvExecuteScript(recvData, callback);
+                    },
+                    error:(request)=>
+                    {
+                        //self.RecvError(request,RECV_DATA_TYPE.DERIVATIVE_DATA);
+                    }
+                });
+                
+                
+               
+            }
+
+            this.RecvExecuteScript=function(recvData, callback)
+            {
+                if (recvData.Code!=0)
+                {
+                    alert(recvData.Error);
+                    return ;
+                }
+
+                console.log('[NetworkFilter::RecvExecuteScript] data ', recvData);
+                callback(recvData);
+            }
+            
+            this.OnSize=function(option)  //自适应大小调整
+            {
+                var height= $(window).height()-60;
+                var width = $(window).width();
+                this.DivKLine.style.top='px';
+                this.DivKLine.style.left='px';
+                this.DivKLine.style.width=width+'px';
+                this.DivKLine.style.height=height+'px';
+                this.Chart.OnSize(option);
+            }
+
+            this.ChangeSymbol=function(symbol)
+            {
+                this.Chart.ChangeSymbol(symbol);
+            }
+
+            this.ChangeIndex=function(windowIndex,indexName,option)
+            {
+                //this.Chart.ChangePeriod(1);
+                //var test=this.Chart.JSChartContainer.ChartPaint[0].Data;
+                this.Chart.ChangeIndex(windowIndex,indexName,option);
+            }
+
+            this.ChangePeriod=function(period)
+            {
+                this.Chart.ChangePeriod(period);
+            }
+
+            this.ChangeRight=function(right)
+            {
+                this.Chart.ChangeRight(right);
+            }
+        }
+
+        $(function () 
+        {
+            WebFont.load({ custom: { families: ['iconfont'] } });   //预加载下iconfont资源
+
+            var klineControl=new KLineChart(document.getElementById('kline'));
+            klineControl.Create();
+
+            $("#button_day").click(function() { klineControl.ChangePeriod(0); } );
+            $("#button_week").click(function() { klineControl.ChangePeriod(1); } );
+            $("#button_month").click(function() { klineControl.ChangePeriod(2); } );
+            $("#button_year").click(function() { klineControl.ChangePeriod(3); } );
+
+            $("#button_1m").click(function() { klineControl.ChangePeriod(4); } );
+            $("#button_5m").click(function() { klineControl.ChangePeriod(5); } );
+            $("#button_15m").click(function() { klineControl.ChangePeriod(6); } );
+            $("#button_30m").click(function() { klineControl.ChangePeriod(7); } );
+
+            $("#button_right").click(function() { klineControl.ChangeRight(0); } );
+            $("#button_right_1").click(function() { klineControl.ChangeRight(1); } );
+            $("#button_right_2").click(function() { klineControl.ChangeRight(2); } );
+
+            $("#button_symbol").click(function() { klineControl.ChangeSymbol("000006.sz"); } );
+
+            $("#button_changeindex").click(function() 
+            { 
+                var indexData=
+                {
+                    API:{Name:'自定义指标',Script:test_index3, Args:null, Url:'http://127.0.0.1:8712/api/Run' ,Version:2},
+                    Window:{ Close:false, Change:false, Overlay:true, Close:true}
+                };
+                klineControl.ChangeIndex(1,"指标1",indexData);
+            } );
+            
+            
+        })
+
+    </script>  
+</body>  
+</html>
+
+
+
+<style>
+
+#kline
+{
+    position: relative;
+    /*margin-top: 100px;*/
+}
+
+.btn-style
+{
+    padding: 3px 8px;
+    border: 1px solid #ececec;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+    
+</style>

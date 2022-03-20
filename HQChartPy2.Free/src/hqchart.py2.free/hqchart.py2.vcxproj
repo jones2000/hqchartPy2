@@ -169,7 +169,7 @@
     <ClInclude Include="..\HQChart.Complier.Source\HQChart.Interface.Data.h" />
     <ClInclude Include="..\HQChart.Complier.Source\HQChart.KLineData.h" />
     <ClInclude Include="..\HQChart.Complier.Source\HQChart.Log.h" />
-    <ClInclude Include="..\HQChart.Complier.Source\zwldef.h" />
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.Define.h" />
     <ClInclude Include="..\HQChart.Complier.ToJson\HQChart.OutVarToJson.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="hqchart.complier.py.callbackdata.h" />

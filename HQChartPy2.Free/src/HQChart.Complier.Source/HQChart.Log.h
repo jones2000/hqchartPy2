@@ -12,7 +12,7 @@
 
 
 #pragma once
-#include "zwldef.h"
+#include "HQChart.Define.h"
 #include <stdio.h>
 #ifdef _WIN32
 

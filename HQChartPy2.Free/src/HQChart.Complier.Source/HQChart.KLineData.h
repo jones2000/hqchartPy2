@@ -11,7 +11,7 @@
 */
 
 #pragma once
-#include "zwldef.h"
+#include "HQChart.Define.h"
 #include <vector>
 #include <list>
 #include <map>

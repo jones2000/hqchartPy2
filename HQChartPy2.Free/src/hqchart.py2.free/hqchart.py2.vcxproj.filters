@@ -48,7 +48,7 @@
     <ClInclude Include="..\HQChart.Complier.Source\HQChart.Log.h">
       <Filter>HQChart.Complier.Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\HQChart.Complier.Source\zwldef.h">
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.Define.h">
       <Filter>HQChart.Complier.Source</Filter>
     </ClInclude>
     <ClInclude Include="hqchart.complier.py.h">

@@ -926,6 +926,9 @@ Variant* HistoryDataCache::GetCustomValue(const std::wstring& strName, Node* pNo
 	if (strName == L"ISDOWN") return GetIsPriceDown();
 	else if (strName == L"ISEQUAL") return GetIsPriceEqual();
 	else if (strName == L"ISUP") return GetIsPriceUp();
+	else if (strName == L"ISLASTBAR") return GetIsLastBar();
+	else if (strName == L"BARSTATUS") return GetBarStatus();
+
 
 	std::wstringstream strDescription;
 	strDescription << L"变量不存在. name=" << strName;
@@ -1011,6 +1014,41 @@ Variant* HistoryDataCache::GetIsPriceEqual() const
 
 		if (item._dClose == item._dOpen) dest[i].SetValue(1);
 		else dest[i].SetValue(0);
+	}
+	pResult->SetType(Variant::ARRAY_DOUBLE_TYPE);
+	return pResult;
+}
+
+Variant* HistoryDataCache::GetIsLastBar() const
+{
+	Variant* pResult = Create();
+	size_t nDataCount = m_aryData.size();
+	auto& aryValue = pResult->GetArrayValue();
+	aryValue.resize(nDataCount);
+	for (size_t i = 0; i < nDataCount; ++i)
+	{
+		const auto& item = m_aryData[i];
+		if (i == nDataCount - 1) aryValue[i].SetValue(1);
+		else aryValue[i].SetValue(0);
+	}
+	pResult->SetType(Variant::ARRAY_DOUBLE_TYPE);
+	return pResult;
+}
+
+//BARSTATUS返回数据位置信息,1表示第一根K线,2表示最后一个数据,0表示中间位置.
+//例如:BARSTATUS=2表示当天是该数据的最后一个周期.
+Variant* HistoryDataCache::GetBarStatus() const
+{
+	Variant* pResult = Create();
+	size_t nDataCount = m_aryData.size();
+	auto& aryValue = pResult->GetArrayValue();
+	aryValue.resize(nDataCount);
+	for (size_t i = 0; i < nDataCount; ++i)
+	{
+		const auto& item = m_aryData[i];
+		if (i == 0) aryValue[i].SetValue(1);
+		else if (i == nDataCount - 1) aryValue[i].SetValue(2);
+		else aryValue[i].SetValue(0);
 	}
 	pResult->SetType(Variant::ARRAY_DOUBLE_TYPE);
 	return pResult;
@@ -1381,6 +1419,9 @@ bool HistoryDataCache::IsSHSZIndex() const
 
 	return false;
 }
+
+
+
 
 
 }

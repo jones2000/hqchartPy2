@@ -866,6 +866,9 @@ void Execute::InitalConstVarTable()
 		L"CURRBARSCOUNT", L"TOTALBARSCOUNT",L"BARPOS",
 		L"SELLVOL", L"BUYVOL", L"ISBUYORDER", L"ISSELLORDER",
 
+		L"ISLASTBAR",
+		L"BARSTATUS",
+
 		L"CODE",		//代码 带后缀
 		L"STKLABEL",	//代码 不带后缀
 		L"STKNAME",		//名称
@@ -1388,7 +1391,7 @@ Variant* Execute::ReadSymbolData(const std::wstring& strName, Identifier* pNode)
 	else if (strName == L"DRAWNULL" || strName==L"NULL")
 		pResult = m_pHistoryData->GetDrawNULL();
 
-	else if (strName == L"ISDOWN" || strName == L"ISEQUAL" || strName == L"ISUP")
+	else if (strName == L"ISDOWN" || strName == L"ISEQUAL" || strName == L"ISUP" || strName==L"ISLASTBAR" || strName==L"BARSTATUS")
 		pResult = m_pHistoryData->GetCustomValue(strName, pNode);
 
 	else if (strName == L"MACHINEDATE" || strName == L"MACHINETIME" || strName == L"MACHINEWEEK")

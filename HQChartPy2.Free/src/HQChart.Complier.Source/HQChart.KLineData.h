@@ -401,6 +401,7 @@ public:
 	virtual Variant* GetPeriodID() const; //分时线=1,分笔成交=2,1分钟线=3,5分钟线=4,15分钟线=5,30分钟线=6,60分钟线=7,日线=8,周线=9,月线=10,多日线=11,年线=12,季线=13,半年线=14。
 	virtual Variant* GetSymbolTypeID() const;
 	virtual Variant* GetDrawNULL() const;
+	
 
 	virtual bool GetIndexScript(const std::wstring& strName, const std::wstring& strCallInfo, ScriptIndex& script, Node* pNode) const;	//获取系统指标脚本
 
@@ -431,6 +432,8 @@ protected:
 	Variant* GetIsPriceDown() const;
 	Variant* GetIsPriceUp() const;
 	Variant* GetIsPriceEqual() const;
+	Variant* GetIsLastBar() const;
+	Variant* GetBarStatus() const;
 
 	static void FitExtendData(ARRAY_EXTEND_DATA& dest, const ARRAY_KDATA& kData, const ARRAY_FINANCE_DATA& fData);			//财务数据K线数据拟合
 	static void FitExtendData(ARRAY_EXTEND_DATA& dest, const ARRAY_KDATA& kData, long lPeriod, const ARRAY_FINANCE_DATA& fData, double dNUll, bool bExactMatch=true);	///数据和K线数据拟合,不做平滑处理 bExactMatch 精确匹配

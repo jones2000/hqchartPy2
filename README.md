@@ -8,7 +8,7 @@ hqchartPy2使用cpython开发， 把麦语法指标计算引擎cc++库分装下�
 **支持平台** windows, linux.  不同平台需要自行编译. 只支持64位平台(py也需要时64位的)<br>
 
 源码目录:[HQChartPy2.Free](/HQChartPy2.Free)
-![效果展示](/HQChartPy2.Free/效果展示.png)
+![效果展示](/HQChartPy2.Free/效果图.png)
 
 
 # hqchart c#

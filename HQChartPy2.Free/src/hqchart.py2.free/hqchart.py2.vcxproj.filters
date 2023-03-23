@@ -75,6 +75,12 @@
     <ClInclude Include="..\HQChart.Complier.Source\HQChart.Interface.Data.h">
       <Filter>HQChart.Complier.Source</Filter>
     </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.ScriptIndex.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.Variant.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -154,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="hqchart.complier.py.callbackdata.cpp">
       <Filter>HQChart.Complier.Py</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.ScriptIndex.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Variant.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

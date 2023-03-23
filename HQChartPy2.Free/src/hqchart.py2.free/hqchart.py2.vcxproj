@@ -170,6 +170,8 @@
     <ClInclude Include="..\HQChart.Complier.Source\HQChart.KLineData.h" />
     <ClInclude Include="..\HQChart.Complier.Source\HQChart.Log.h" />
     <ClInclude Include="..\HQChart.Complier.Source\HQChart.Define.h" />
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.ScriptIndex.h" />
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.Variant.h" />
     <ClInclude Include="..\HQChart.Complier.ToJson\HQChart.OutVarToJson.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="hqchart.complier.py.callbackdata.h" />
@@ -197,7 +199,9 @@
     <ClCompile Include="..\HQChart.Complier.Source\HQChart.KLineData.cpp" />
     <ClCompile Include="..\HQChart.Complier.Source\HQChart.Log.cpp" />
     <ClCompile Include="..\HQChart.Complier.Source\HQChart.ParseExcept.cpp" />
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.ScriptIndex.cpp" />
     <ClCompile Include="..\HQChart.Complier.Source\HQChart.ScriptLibrary.cpp" />
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.Variant.cpp" />
     <ClCompile Include="..\HQChart.Complier.ToJson\HQChart.OutVarToJson.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="hqchart.complier.py.callbackdata.cpp" />

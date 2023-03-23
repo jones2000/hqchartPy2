@@ -15,17 +15,25 @@ jones_2000@163.com
 #include <string>
 #include <thread>
 #include "hqchart.complier.py.runconfig.h"
+#include "HQChart.OutVarToJson.h"
 
 using namespace HQChart::Complier;
 
 const int MAIN_VERSION = 1;
-const int MIN_VERSION = 1110;	//后5位是小版本号
+const int MIN_VERSION = 1111;	//后5位是小版本号
 
 
 PyObject* GetVersion(PyObject* pSelf, PyObject* args)
 {
 	int nVersion = MAIN_VERSION * 100000 + MIN_VERSION;
 	return PyLong_FromLong(nVersion);
+}
+
+PyObject* GetPyVersion(PyObject* pSelf, PyObject* args)
+{
+	std::string strVersionA = PY_VERSION;
+	std::wstring strVersion = HQChart::Complier::UTF8ToWString(strVersionA);
+	return PyUnicode_FromWideChar(strVersion.c_str(), -1);
 }
 
 PyObject* GetAuthorizeInfo(PyObject* pSelf, PyObject* args)
@@ -82,6 +90,7 @@ static PyMethodDef HQCHART_PY_METHODS[] =
 	{ "GetAuthorizeInfo", (PyCFunction)GetAuthorizeInfo, METH_NOARGS, "get Authorize information" },
 	{ "LoadAuthorizeInfo",(PyCFunction)LoadAuthorizeInfo, METH_VARARGS, "load Authorize by key"},
 	{ "SetLog",(PyCFunction)SetLog, METH_VARARGS, "enable/disenable log out"},
+	{ "GetPyVersion", (PyCFunction)GetPyVersion, METH_NOARGS, "get build python version"},
 
 	// Terminate the array with an object containing nulls.
 	{ nullptr, nullptr, 0, nullptr }

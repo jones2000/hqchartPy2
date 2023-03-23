@@ -1,0 +1,10 @@
+LIBRARY
+
+EXPORTS
+
+Run @1
+MainVersion @2
+MinVersion @3
+AddFunction	@4
+AddVariant @5
+GetAuthorizeInfo @6

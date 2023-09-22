@@ -65,6 +65,11 @@ class IHQData(object):
     # 历史所有的流通股本 时间序列
     def GetHisCapital(self,symbol, period, right, kcount,jobID):
         pass
+    
+    # 自定义变量
+    def GetCustomVariable(self,symbol, period, right, kcount,jobID):
+        data={ "type": 0, "data":10 }
+        return data;
 
     def GetDataByNumber(self, symbol,funcName,id, period,right,kcount, jobID):
         if (funcName==u'FINANCE') : # 财务数据
@@ -87,7 +92,8 @@ class IHQData(object):
         elif (funcName==u'TOTALCAPITAL'):
             return self.GetTotalCapital(symbol,period,right,kcount, jobID)
         else :
-            return False
+            return self.GetCustomVariable(symbol,period,right,kcount, jobID)
+            # return False
 
     def GetDataByString(self, symbol,funcName,period,right,kcount, jobID):
         return False
@@ -190,6 +196,7 @@ class FastHQChart :
         # 加载dll
         strOS = platform.system()
         dllVersion=HQChartPy2.GetVersion()
+        pyVersion=HQChartPy2.GetPyVersion()
         if (Key) :
             HQChartPy2.LoadAuthorizeInfo(Key)
         authorize=HQChartPy2.GetAuthorizeInfo()
@@ -199,12 +206,30 @@ class FastHQChart :
         print("*  欢迎使用HQChartPy2 C++ 技术指标计算引擎")
         log="*  版本号:{0}.{1}".format(int(dllVersion/100000), (dllVersion%100000))
         print(log)
+        log="*  编译Python版本号:{0}".format(pyVersion)
+        print(log)
         log="*  授权信息:{0}".format(authorize)
         print(log)
         log="*  运行系统:{0}".format(strOS)
         print(log)
         print("*******************************************************************************************")
         pass
+
+    # 添加外部自定义变量
+    @staticmethod 
+    def AddCustomVariable(varName) :
+        return HQChartPy2.AddCustomVariable(varName);
+
+    
+    # 缓存K线数据
+    @staticmethod
+    def AddKLineData(data):
+        return HQChartPy2.AddKLineData(data);
+
+    # 更新缓存K线数据 只能更新最新一条数据和新的数据,历史数据不支持修改
+    @staticmethod
+    def UpdateKLineData(data):
+        return HQChartPy2.UpdateKLineData(data);
 
     @staticmethod
     def Run(jsonConfig, hqData, proSuccess=None,procFailed=None):
@@ -227,7 +252,7 @@ class FastHQChart :
         bResult=HQChartPy2.Run(jsonConfig,callbackConfig)
         return bResult
 
-    # 获取试用注册码
+    # 获取试用注册码(商用版)
     @staticmethod
     def GetTrialAuthorize(mac, url="http://py2.hqchart.cn:8712/api/v1/CreateAuthorize"):
 

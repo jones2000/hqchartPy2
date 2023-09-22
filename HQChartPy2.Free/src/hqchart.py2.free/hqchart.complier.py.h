@@ -31,6 +31,7 @@ namespace HQChart { namespace Complier { namespace Py {
 bool LoadAuthorizeInfo(const std::string& strEncrypted);
 void GetAuthorizeInfo(std::wstring& strValue);
 bool AddSystemIndex(PyObject* pConfig);
+bool AddCustomVariable(const std::string& strValue);
 
 }
 }

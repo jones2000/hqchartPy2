@@ -31,6 +31,17 @@ bool LoadAuthorizeInfo(const std::string& strBase64Encrypted)
 	return true;
 }
 
+bool AddCustomVariable(const std::string& strValue)
+{
+	if (strValue.empty()) return 0;
+
+	std::wstring strName=UTF8ToWString(strValue);
+	auto& customVar = CustomVariant::GetInstance();
+	customVar.Add(strName);
+
+	return 1;
+}
+
 void GetAuthorizeInfo(std::wstring& strValue)
 {
 	strValue = L"HQChartPy2ÉçÇø°æ±¾";

@@ -22,6 +22,9 @@
     <Filter Include="HQChart.Complier.ToJson">
       <UniqueIdentifier>{c710f3ef-a7e6-48e0-bbc4-91f080be096d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HQChart.Cache">
+      <UniqueIdentifier>{86e2d44c-d394-455c-a3f1-4fe15c8bbad2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -80,6 +83,9 @@
     </ClInclude>
     <ClInclude Include="..\HQChart.Complier.Source\HQChart.Variant.h">
       <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
+    <ClInclude Include="HQChart.PyCache.h">
+      <Filter>HQChart.Cache</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="..\HQChart.Complier.Source\HQChart.Variant.cpp">
       <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HQChart.PyCache.cpp">
+      <Filter>HQChart.Cache</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

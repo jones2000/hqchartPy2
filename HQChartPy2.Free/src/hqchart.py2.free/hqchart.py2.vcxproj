@@ -30,26 +30,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -140,6 +140,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(ProjectDir)x64\debug\HQChartPy2.pdb   $(ProjectDir)\..\Test_hqchartPy2.Free\
+copy  $(ProjectDir)x64\debug\HQChartPy2.pyd  $(ProjectDir)\..\Test_hqchartPy2.Free\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -160,6 +164,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(ProjectDir)x64\release\HQChartPy2.pdb   $(ProjectDir)\..\Test_hqchartPy2.Free\
+copy  $(ProjectDir)x64\release\HQChartPy2.pyd  $(ProjectDir)\..\Test_hqchartPy2.Free\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\HQChart.Complier.Source\CalendarHelper.h" />
@@ -179,6 +187,7 @@
     <ClInclude Include="hqchart.complier.py.callbackfunction.h" />
     <ClInclude Include="hqchart.complier.py.h" />
     <ClInclude Include="hqchart.complier.py.runconfig.h" />
+    <ClInclude Include="HQChart.PyCache.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="userhelper.h" />
   </ItemGroup>
@@ -210,6 +219,7 @@
     <ClCompile Include="hqchart.complier.py.cpp" />
     <ClCompile Include="hqchart.complier.py.interface.cpp" />
     <ClCompile Include="hqchart.complier.py.runconfig.cpp" />
+    <ClCompile Include="HQChart.PyCache.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

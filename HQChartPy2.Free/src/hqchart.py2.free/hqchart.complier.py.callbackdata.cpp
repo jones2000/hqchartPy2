@@ -21,6 +21,7 @@ jones_2000@163.com
 #include "hqchart.complier.py.callbackdata.h"
 #include "hqchart.complier.py.runconfig.h"
 #include "hqchart.complier.py.callbackfunction.h"
+#include "HQChart.PyCache.h"
 
 //json ¶ÁÈ¡
 #include "document.h"
@@ -98,6 +99,17 @@ void HistoryDataCallback::Reset()
 bool HistoryDataCallback::LoadKData()
 {
 	if (!m_pRunConfig || !m_pRunConfig->m_pGetKData) return false;
+
+	//¶Á»º´æ
+	const PyCache::KLineCache& cache = PyCache::KLineCache::GetInstance();
+	PyCache::KLineCacheItem::REF_PTR pItem=cache.GetData(m_strSymbol, m_lPeriod, m_lRight);
+	if (pItem)
+	{
+		m_aryData = pItem->GetData();
+		m_strName = pItem->GetName();
+		UpdateKDataInfo();
+		return true;
+	}
 
 	PyCallbackFunction pyFunction(m_pRunConfig->m_pGetKData);
 	PyObject* arglist = Py_BuildValue("uiis", m_strSymbol.c_str(), m_lPeriod, m_lRight, m_pRunConfig->m_strGuid.c_str());

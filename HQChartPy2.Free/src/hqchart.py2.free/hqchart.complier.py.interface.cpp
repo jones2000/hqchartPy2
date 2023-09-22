@@ -16,11 +16,12 @@ jones_2000@163.com
 #include <thread>
 #include "hqchart.complier.py.runconfig.h"
 #include "HQChart.OutVarToJson.h"
+#include "HQChart.PyCache.h"
 
 using namespace HQChart::Complier;
 
 const int MAIN_VERSION = 1;
-const int MIN_VERSION = 1111;	//后5位是小版本号
+const int MIN_VERSION = 1113;	//后5位是小版本号
 
 
 PyObject* GetVersion(PyObject* pSelf, PyObject* args)
@@ -47,6 +48,21 @@ PyObject* GetAuthorizeInfo(PyObject* pSelf, PyObject* args)
 PyObject* LoadAuthorizeInfo(PyObject* pSelf, PyObject* args)
 {
 	bool bResult = Py::LoadAuthorizeInfo("");
+
+	return PyBool_FromLong(bResult ? 1 : 0);
+}
+
+PyObject* AddCustomVariable(PyObject* pSelf, PyObject* args)
+{
+	const char* pstrName = NULL;
+	if (!PyArg_ParseTuple(args, "s", &pstrName))
+	{
+		return PyBool_FromLong(0);
+	}
+
+	std::string strName = pstrName;
+
+	bool bResult = Py::AddCustomVariable(strName);
 
 	return PyBool_FromLong(bResult ? 1 : 0);
 }
@@ -81,6 +97,31 @@ PyObject* SetLog(PyObject* pSelf, PyObject* args)
 	return PyBool_FromLong(1);
 }
 
+
+PyObject* AddKLineData(PyObject* pSelf, PyObject* args)
+{
+	PyObject* pData = NULL;
+
+	if (!PyArg_ParseTuple(args, "O", &pData))
+		return PyBool_FromLong(0);
+
+	bool bResult = HQChart::PyCache::KLineCache().GetInstance().AddData(pData);
+
+	return PyBool_FromLong(bResult ? 1 : 0);
+}
+
+PyObject* UpdateKLineData(PyObject* pSelf, PyObject* args)
+{
+	PyObject* pData = NULL;
+
+	if (!PyArg_ParseTuple(args, "O", &pData))
+		return PyBool_FromLong(0);
+
+	bool bResult = HQChart::PyCache::KLineCache().GetInstance().UpdateData(pData);
+
+	return PyBool_FromLong(bResult ? 1 : 0);
+}
+
 static PyMethodDef HQCHART_PY_METHODS[] =
 {
 	// The first property is the name exposed to Python, fast_tanh, the second is the C++
@@ -91,6 +132,9 @@ static PyMethodDef HQCHART_PY_METHODS[] =
 	{ "LoadAuthorizeInfo",(PyCFunction)LoadAuthorizeInfo, METH_VARARGS, "load Authorize by key"},
 	{ "SetLog",(PyCFunction)SetLog, METH_VARARGS, "enable/disenable log out"},
 	{ "GetPyVersion", (PyCFunction)GetPyVersion, METH_NOARGS, "get build python version"},
+	{ "AddCustomVariable", (PyCFunction)AddCustomVariable, METH_VARARGS, "add custom variable"},
+	{ "AddKLineData",(PyCFunction)AddKLineData, METH_VARARGS, "add klie data to cache"},
+	{ "UpdateKLineData",(PyCFunction)UpdateKLineData, METH_VARARGS, "update klie data to cache"},
 
 	// Terminate the array with an object containing nulls.
 	{ nullptr, nullptr, 0, nullptr }

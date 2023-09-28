@@ -437,7 +437,7 @@ private:
 	Variant* DRAWTEXT(const Variant& cond, const Variant& data, const Variant& text);
 	Variant* DRAWNUMBER(const Variant& cond, const Variant& data, const Variant& number);
 	Variant* DRAWBAND(const Variant& data, const Variant& color, const Variant& data2, const Variant& color2);
-	Variant* PLOYLINE(const Variant& cond, const Variant& data);
+	Variant* PLOYLINE(const Variant& cond, const Variant& data, const IHistoryData* pHistoryData);
 	Variant* DRAWLINE(const Variant& cond, const Variant& data, const Variant& cond2, const Variant& data2, const Variant& expend);
 	Variant* DRAWTEXT_FIX(const Variant& cond, const Variant& x, const Variant& y, const Variant& type, const Variant& text);
 	Variant* DRAWNUMBER_FIX(const Variant& cond, const Variant& x, const Variant& y, const Variant& type, const Variant& number);
@@ -467,6 +467,10 @@ private:
 	static void MeetConditionData(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& cond, double dData);
 
 	static void PLOYLINE(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& cond, const ARRAY_DOUBLE& data);
+	static void PLOYLINE(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& cond, double dValue);
+	static void PLOYLINE(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& data, const IHistoryData* pHistoryData);
+	static void PLOYLINE(ARRAY_DOUBLE& dest, double dValue, const IHistoryData* pHistoryData);
+	static void PLOYLINE_CalculateLine(ARRAY_DOUBLE& dest);
 
 
 	//变量方法

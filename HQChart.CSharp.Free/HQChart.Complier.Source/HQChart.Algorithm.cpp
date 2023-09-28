@@ -1381,9 +1381,16 @@ void VariantOperator::COUNT(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& data, const 
 	long lPeriod = 0, lIndex = 0, lTotal = 0;
 	for (long i = 0, j = 0; i < (long)n.size(); ++i)
 	{
-		if (!n[i].IsVaild()) continue;
-		lPeriod = (long)n[i]._dValue;
-		if (lPeriod <= 0) lPeriod = i + 1;
+		if (!n[i].IsVaild())
+		{
+			lPeriod = i + 1;
+		}
+		else
+		{
+			lPeriod = (long)n[i]._dValue;
+			if (lPeriod < 0) lPeriod = i + 1;
+		}
+		
 
 		lTotal = 0;
 		for (long j = 0; j < lPeriod; ++j)

@@ -717,7 +717,7 @@ Variant* VariantOperator::DRAWBAND(const Variant& data, const Variant& color, co
 //绘制折线段.
 //用法:PLOYLINE(COND, PRICE), 当COND条件满足时, 以PRICE位置为顶点画折线连接.
 //例如:PLOYLINE(HIGH >= HHV(HIGH, 20), HIGH)表示在创20天新高点之间画折线
-Variant* VariantOperator::PLOYLINE(const Variant& cond, const Variant& data)
+Variant* VariantOperator::PLOYLINE(const Variant& cond, const Variant& data, const IHistoryData* pHistoryData)
 {
 	Variant* pResult = Create();
 
@@ -726,8 +726,89 @@ Variant* VariantOperator::PLOYLINE(const Variant& cond, const Variant& data)
 		PLOYLINE(pResult->m_aryValue, cond.m_aryValue, data.m_aryValue);
 		pResult->SetType(Variant::ARRAY_DOUBLE_TYPE);
 	}
+	else if (cond.GetType() == Variant::ARRAY_DOUBLE_TYPE && data.GetType() == Variant::DOUBLE_TYPE)
+	{
+		if (!data.IsVaildDoulbe()) return pResult;
+
+		PLOYLINE(pResult->m_aryValue, cond.m_aryValue, data.GetDoubleValue());
+		pResult->SetType(Variant::ARRAY_DOUBLE_TYPE);
+	}
+	else if (cond.GetType() == Variant::DOUBLE_TYPE && data.GetType() == Variant::ARRAY_DOUBLE_TYPE)
+	{
+		if (!cond.IsVaildDoulbe()) return pResult;
+		if (cond.GetDoubleValue() <= 0) return pResult;
+
+		PLOYLINE(pResult->m_aryValue,data.m_aryValue, pHistoryData);
+		pResult->SetType(Variant::ARRAY_DOUBLE_TYPE);
+	}
+	else if (cond.GetType() == Variant::DOUBLE_TYPE && data.GetType() == Variant::DOUBLE_TYPE)
+	{
+		if (!cond.IsVaildDoulbe()) return pResult;
+		if (!data.IsVaildDoulbe()) return pResult;
+		if (cond.GetDoubleValue() <= 0) return pResult;
+
+		PLOYLINE(pResult->m_aryValue, data.GetDoubleValue(), pHistoryData);
+		pResult->SetType(Variant::ARRAY_DOUBLE_TYPE);
+	}
 
 	return pResult;
+}
+
+void VariantOperator::PLOYLINE(ARRAY_DOUBLE& dest, double dValue, const IHistoryData* pHistoryData)
+{
+	long lKCount = pHistoryData->GetKCount();
+	VARIANT_ITEM item;
+	item.SetValue(dValue);
+	dest.resize(lKCount, item);
+}
+
+
+void VariantOperator::PLOYLINE(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& data, const IHistoryData* pHistoryData)
+{
+	long lKCount = pHistoryData->GetKCount();
+	dest.resize(lKCount, VARIANT_ITEM());
+
+	long lDataCount = (long)data.size();
+	int i = 0;
+	for (i = 0; i < lKCount; ++i)
+	{
+		if (i >= lDataCount) continue;
+
+		const auto& dataItem = data[i];
+		if (!dataItem.IsVaild()) continue;
+
+		dest[i].SetValue(dataItem._dValue);
+	}
+
+	PLOYLINE_CalculateLine(dest);
+}
+
+
+void VariantOperator::PLOYLINE(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& cond, double dValue)
+{
+	int nCount = (int)cond.size();
+	dest.resize(nCount, VARIANT_ITEM());
+
+	int i = 0;
+	bool bFirst = true;
+	for (i = 0; i < nCount; ++i)
+	{
+		const auto& condItem = cond[i];
+		if (bFirst)
+		{
+			if (!condItem.IsVaild()) continue;
+
+			if (fabs(condItem._dValue - 1) < 0.0001)
+			{
+				dest[i].SetValue(dValue);
+				bFirst = false; 
+			}
+		}
+		else
+		{
+			dest[i].SetValue(dValue);
+		}
+	}
 }
 
 void VariantOperator::PLOYLINE(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& cond, const ARRAY_DOUBLE& data)
@@ -749,6 +830,13 @@ void VariantOperator::PLOYLINE(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& cond, con
 		}
 	}
 
+	PLOYLINE_CalculateLine(dest);
+}
+
+void VariantOperator::PLOYLINE_CalculateLine(ARRAY_DOUBLE& dest)
+{
+	int i = 0;
+	int nCount = (int)dest.size();
 	double dTopGap = 0, dGap = 0;
 	for (i = 0; i < nCount; ++i)
 	{
@@ -810,7 +898,6 @@ void VariantOperator::PLOYLINE(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& cond, con
 			dest[i].SetValue(dest[nLeft]._dValue + dGap);
 		}
 	}
-	
 }
 
 //属于未来函数, 绘制直线段.

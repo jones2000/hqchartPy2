@@ -480,8 +480,11 @@ bool IHistoryData::IsMinutePeriod(long lPeriod)
 	case PERIOD_TYPE_ID::PERIOD_MIN15_ID:
 	case PERIOD_TYPE_ID::PERIOD_MIN30_ID:
 	case PERIOD_TYPE_ID::PERIOD_MIN60_ID:
+	case PERIOD_TYPE_ID::PERIOD_MIN120_ID:
+	case PERIOD_TYPE_ID::PERIOD_MIN240_ID:
 		return true;
 	default:
+		if (lPeriod >= 20001 && lPeriod < 30000) return true;	//自定义日线周期
 		return false;
 	}
 }
@@ -510,6 +513,7 @@ bool IHistoryData::IsDayPeriod(long lPeriod)
 	case PERIOD_TYPE_ID::PERIOD_YEAR_ID:
 	case PERIOD_TYPE_ID::PERIOD_QUARTER_ID:
 	case PERIOD_TYPE_ID::PERIOD_TWO_WEEK_ID:
+	case PERIOD_TYPE_ID::PERIOD_HALF_YEAR_ID:
 		return true;
 	default:
 		if (lPeriod >= 40001 && lPeriod < 50000) return true;	//自定义日线周期

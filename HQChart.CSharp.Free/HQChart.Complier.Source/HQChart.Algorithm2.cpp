@@ -538,13 +538,27 @@ Variant* VariantOperator::IFF(const Variant& data, const Variant& trueData, cons
 			if (!data.m_aryValue[i].IsVaild()) continue;
 			if (data.m_aryValue[i]._dValue)
 			{
-				if (isDouble) dest[i].SetValue(dTrueValue);
-				else dest[i] = trueData.m_aryValue[i];
+				if (isDouble)
+				{
+					dest[i].SetValue(dTrueValue);
+				}
+				else
+				{
+					if (i<trueData.m_aryValue.size())
+						dest[i] = trueData.m_aryValue[i];
+				}
 			}
 			else
 			{
-				if (isDouble2) dest[i].SetValue(dFalseValue);
-				else dest[i] = falseData.m_aryValue[i];
+				if (isDouble2)
+				{
+					dest[i].SetValue(dFalseValue);
+				}
+				else
+				{
+					if (i<falseData.m_aryValue.size())
+						dest[i] = falseData.m_aryValue[i];
+				}
 			}
 		}
 

@@ -707,7 +707,7 @@ Variant* VariantOperator::CallDrawFunction(const std::wstring& strFuncName, cons
 	else if (SWITCH_CALL_FUNCTIONS(L"DRAWTEXT", 3)) return DRAWTEXT(*args[0], *args[1], *args[2]);
 	else if (SWITCH_CALL_FUNCTIONS(L"DRAWNUMBER", 3)) return DRAWNUMBER(*args[0], *args[1], *args[2]);
 	else if (SWITCH_CALL_FUNCTIONS(L"DRAWBAND", 4)) return DRAWBAND(*args[0], *args[1], *args[2], *args[3]);
-	else if (SWITCH_CALL_FUNCTIONS(L"PLOYLINE", 2)) return PLOYLINE(*args[0], *args[1]);
+	else if (SWITCH_CALL_FUNCTIONS(L"PLOYLINE", 2)) return PLOYLINE(*args[0], *args[1], pHistoryData);
 	else if (SWITCH_CALL_FUNCTIONS(L"DRAWLINE", 5)) return DRAWLINE(*args[0], *args[1], *args[2], *args[3], *args[4]);
 	else if (SWITCH_CALL_FUNCTIONS(L"DRAWTEXT_FIX", 5)) return DRAWTEXT_FIX(*args[0], *args[1], *args[2], *args[3], *args[4]);
 	else if (SWITCH_CALL_FUNCTIONS(L"DRAWNUMBER_FIX", 5)) return DRAWNUMBER_FIX(*args[0], *args[1], *args[2], *args[3], *args[4]);

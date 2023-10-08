@@ -21,7 +21,7 @@ jones_2000@163.com
 using namespace HQChart::Complier;
 
 const int MAIN_VERSION = 1;
-const int MIN_VERSION = 1113;	//后5位是小版本号
+const int MIN_VERSION = 1153;	//后5位是小版本号
 
 
 PyObject* GetVersion(PyObject* pSelf, PyObject* args)

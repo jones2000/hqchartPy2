@@ -619,16 +619,19 @@ Variant* Execute::VisitBinaryExpression(Node* pNode)
 				pValueNode->SetVariantOut(NULL);
 				const std::wstring& strOp = p->GetOperator();
 				Variant* pVariantOut = NULL;
-				if (strOp == L"-") pVariantOut = m_VariantOperator.Subtract(*pLeftValue, *pRightValue);
-				else if (strOp == L"*") pVariantOut = m_VariantOperator.Multiply(*pLeftValue, *pRightValue);
-				else if (strOp == L"/") pVariantOut = m_VariantOperator.Divide(*pLeftValue, *pRightValue);
-				else if (strOp == L"+") pVariantOut = m_VariantOperator.Add(*pLeftValue, *pRightValue);
-				else if (strOp == L">") pVariantOut = m_VariantOperator.GT(*pLeftValue, *pRightValue);
-				else if (strOp == L">=") pVariantOut = m_VariantOperator.GTE(*pLeftValue, *pRightValue);
-				else if (strOp == L"<") pVariantOut = m_VariantOperator.LT(*pLeftValue, *pRightValue);
-				else if (strOp == L"<=") pVariantOut = m_VariantOperator.LTE(*pLeftValue, *pRightValue);
-				else if (strOp == L"=" || strOp == L"==") pVariantOut = m_VariantOperator.EQ(*pLeftValue, *pRightValue);
-				else if (strOp == L"<>" || strOp == L"!=") pVariantOut = m_VariantOperator.NEQ(*pLeftValue, *pRightValue);
+				if (pLeftValue && pRightValue)
+				{
+					if (strOp == L"-") pVariantOut = m_VariantOperator.Subtract(*pLeftValue, *pRightValue);
+					else if (strOp == L"*") pVariantOut = m_VariantOperator.Multiply(*pLeftValue, *pRightValue);
+					else if (strOp == L"/") pVariantOut = m_VariantOperator.Divide(*pLeftValue, *pRightValue);
+					else if (strOp == L"+") pVariantOut = m_VariantOperator.Add(*pLeftValue, *pRightValue);
+					else if (strOp == L">") pVariantOut = m_VariantOperator.GT(*pLeftValue, *pRightValue);
+					else if (strOp == L">=") pVariantOut = m_VariantOperator.GTE(*pLeftValue, *pRightValue);
+					else if (strOp == L"<") pVariantOut = m_VariantOperator.LT(*pLeftValue, *pRightValue);
+					else if (strOp == L"<=") pVariantOut = m_VariantOperator.LTE(*pLeftValue, *pRightValue);
+					else if (strOp == L"=" || strOp == L"==") pVariantOut = m_VariantOperator.EQ(*pLeftValue, *pRightValue);
+					else if (strOp == L"<>" || strOp == L"!=") pVariantOut = m_VariantOperator.NEQ(*pLeftValue, *pRightValue);
+				}
 
 				pValueNode->SetVariantOut(pVariantOut);
 			}
@@ -640,8 +643,11 @@ Variant* Execute::VisitBinaryExpression(Node* pNode)
 				pValueNode->SetVariantOut(NULL);
 				const std::wstring& strOp = p->GetOperator();
 				Variant* pVariantOut = NULL;
-				if (strOp == L"&&" || strOp == L"AND") pVariantOut = m_VariantOperator.And(*pLeftValue, *pRightValue);
-				else if (strOp == L"||" || strOp==L"OR") pVariantOut = m_VariantOperator.Or(*pLeftValue, *pRightValue);
+				if (pLeftValue && pRightValue)
+				{
+					if (strOp == L"&&" || strOp == L"AND") pVariantOut = m_VariantOperator.And(*pLeftValue, *pRightValue);
+					else if (strOp == L"||" || strOp == L"OR") pVariantOut = m_VariantOperator.Or(*pLeftValue, *pRightValue);
+				}
 
 				pValueNode->SetVariantOut(pVariantOut);
 			}
@@ -967,7 +973,10 @@ void Execute::InitalConstVarTable()
 
 		L"ISDOWN",
 		L"ISEQUAL",
-		L"ISUP"
+		L"ISUP",
+
+
+		L"NONE",	//≤‚ ‘”√
 	};
 
 	m_mapConstVarTable.clear();
@@ -1469,6 +1478,9 @@ Variant* Execute::ReadSymbolData(const std::wstring& strName, Identifier* pNode)
 
 	else if (strName == L"MACHINEDATE" || strName == L"MACHINETIME" || strName == L"MACHINEWEEK")
 		pResult = ReadMachineDateTime(strName);
+
+	else if (strName==L"NONE")
+		return  NULL;
 	
 	return pResult;
 }

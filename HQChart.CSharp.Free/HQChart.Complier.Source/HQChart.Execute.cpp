@@ -185,6 +185,17 @@ void Execute::VisitStatement(Statement* pNode)
 			m_aryOutVarInfo.push_back(varInfo);
 		}
 	}
+	else if (pExpression->GetType() == Syntax::UNARYEXPRESSION_ID)
+	{
+		UnaryExpression* pUnaryExpression = pExpression->As<UnaryExpression>();
+		OutVarInfo varInfo;		//变量信息
+		if (ReadUnaryExpression(pUnaryExpression, varInfo))
+		{
+			m_mapOutVarTable[varInfo.GetName()] = varInfo.GetOutValue();
+			m_aryOutVarInfo.push_back(varInfo);
+		}
+
+	}
 	else if (pExpression->GetType() == Syntax::SEQUENCEEXPRESSION_ID)
 	{
 		SequenceExpression* pSequenceExpression = pExpression->As<SequenceExpression>();
@@ -231,6 +242,14 @@ void Execute::VisitStatement(Statement* pNode)
 				}
 				
 			}
+			else if (itemExpression->GetType() == Syntax::UNARYEXPRESSION_ID)
+			{
+				if (i == 0)
+				{
+					UnaryExpression* pUnaryExpression = itemExpression->As<UnaryExpression>();
+					ReadUnaryExpression(pUnaryExpression, varInfo);
+				}
+			}
 		}
 
 		if (!varInfo.GetName().empty())
@@ -239,6 +258,50 @@ void Execute::VisitStatement(Statement* pNode)
 			m_aryOutVarInfo.push_back(varInfo);
 		}
 	}
+}
+
+bool Execute::ReadUnaryExpression(UnaryExpression* pUnaryExpression, OutVarInfo& varInfo)
+{
+	Expression* pArgument = pUnaryExpression->GetArgument();
+	bool bResult = false;
+	if (pArgument->GetType() == Syntax::IDENTIFIER_ID)
+	{
+		Identifier* pIdentifier = pArgument->As<Identifier>();
+		bResult = ReadIdentifier(pIdentifier, varInfo);
+	}
+	else if (pArgument->GetType() == Syntax::NUMERICLITERAL_ID)
+	{
+		NumericLiteral* pNumericLiteral = pArgument->As<NumericLiteral>();
+		bResult = ReadNumericLiteral(pNumericLiteral, varInfo);
+	}
+	else if (pArgument->GetType() == Syntax::BINARYEXPRESSION_ID)
+	{
+		bResult = ReadBinaryExpression(pArgument, varInfo);
+	}
+	else if (pArgument->GetType() == Syntax::CALLEXPRESSION_ID)
+	{
+		CallExpression* pCallExpression = pArgument->As<CallExpression>();
+		bResult = ReadCallExpression(pCallExpression, varInfo);
+	}
+	else
+	{
+		return false;
+	}
+
+	if (!bResult) return false;
+
+	
+	if (pUnaryExpression->GetOperator() == L"-")
+	{
+		Variant varZeor;
+		varZeor.SetDoubleValue(0);
+		varInfo.GetOutValue();
+		Variant* pTempValue = varInfo.GetOutValue();
+		Variant* pValue = m_VariantOperator.Subtract(varZeor, *pTempValue);
+		varInfo.SetOutValue(pValue);
+	}
+
+	return true;
 }
 
 bool Execute::ReadStringLiteral(StringLiteral* pStringLiteral, OutVarInfo& varInfo)
@@ -493,6 +556,9 @@ void Execute::VisitNode(Node* pNode)
 			VisitCallExpression(p);
 		}
 		break;
+	case Syntax::UNARYEXPRESSION_ID:
+		VisitUnaryExpression(pNode->As<UnaryExpression>());
+		break;
 
 	default:
 		break;
@@ -544,20 +610,7 @@ void Execute::VisitAssignmentExpression(AssignmentExpression* pNode)
 	else if (nRightType == Syntax::UNARYEXPRESSION_ID)
 	{
 		UnaryExpression* p = pRight->As<UnaryExpression>();
-		if (p->GetOperator() == L"-")
-		{
-			Variant* pTempValue = GetNodeValue(p->GetArgument());
-			if (pTempValue)
-			{
-				Variant varZeor;
-				varZeor.SetDoubleValue(0);
-				pValue = m_VariantOperator.Subtract(varZeor, *pTempValue);
-			}
-		}
-		else
-		{
-			pValue = p->GetArgument()->GetVariantOut();
-		}
+		pValue=VisitUnaryExpression(p);
 	}
 	else if (nRightType == Syntax::STRINGLITERAL_ID)
 	{
@@ -659,6 +712,26 @@ Variant* Execute::VisitBinaryExpression(Node* pNode)
 	return pNode->GetVariantOut();
 }
 
+Variant* Execute::GetNodeValueEx(Node* pNode)
+{
+	Variant* pValue = NULL;
+	int nType= pNode->GetType();
+	if (nType == Syntax::BINARYEXPRESSION_ID || nType == Syntax::LOGICALEXPRESSION_ID)
+	{
+		pValue = VisitBinaryExpression(pNode->As<BinaryExpression>());
+	}
+	else if (nType == Syntax::CALLEXPRESSION_ID)
+	{
+		pValue = VisitCallExpression(pNode->As<CallExpression>());
+	}
+	else
+	{
+		pValue = GetNodeValue(pNode);
+	}
+
+	return pValue;
+}
+
 Variant* Execute::GetNodeValue(Node* pNode)
 {
 	int nType = pNode->GetType();
@@ -672,28 +745,7 @@ Variant* Execute::GetNodeValue(Node* pNode)
 	case Syntax::UNARYEXPRESSION_ID:
 		{
 			UnaryExpression* p = pNode->As<UnaryExpression>();
-			Expression* pArgument = p->GetArgument();
-
-			if (p->GetOperator() == L"-")
-			{
-				Variant zeorVariant;
-				zeorVariant.SetDoubleValue(0);
-				if (pArgument->GetType() == Syntax::IDENTIFIER_ID)
-				{
-					Identifier* pIdentifier = pArgument->As<Identifier>();
-					Variant* pArgValue = ReadVariable(pIdentifier->GetName(), pIdentifier);
-					Variant* pValue = m_VariantOperator.Subtract(zeorVariant, *pArgValue);
-					return pValue;
-				}
-				else
-				{
-					Variant* pArgValue = pArgument->GetVariant(&m_VariantOperator);
-					Variant* pValue = m_VariantOperator.Subtract(zeorVariant, *pArgValue);
-					return pValue;
-				}
-			}
-
-			Variant* pValue = pArgument->GetVariant(&m_VariantOperator);
+			Variant* pValue=VisitUnaryExpression(p);
 			return pValue;
 		}
 	case Syntax::IDENTIFIER_ID:	//变量
@@ -715,9 +767,32 @@ Variant* Execute::GetNodeValue(Node* pNode)
 	case Syntax::CALLEXPRESSION_ID:
 		return VisitCallExpression(pNode->As<CallExpression>());
 	default:
-		ThrowUnexpectedNode(pNode);
+		ThrowUnexpectedNode(pNode->As<UnaryExpression>());
 		return NULL;
 	}
+}
+
+Variant* Execute::VisitUnaryExpression(UnaryExpression* pNode)
+{
+	Variant* pValue = NULL;
+	Expression* pArgument = pNode->GetArgument();
+
+	if (pNode->GetOperator() == L"-")
+	{
+		Variant* pTempValue = GetNodeValueEx(pArgument);
+		if (pTempValue)
+		{
+			Variant varZeor;
+			varZeor.SetDoubleValue(0);
+			pValue = m_VariantOperator.Subtract(varZeor, *pTempValue);
+		}
+	}
+	else
+	{
+		pValue = GetNodeValueEx(pArgument);
+	}
+
+	return pValue;
 }
 
 Variant* Execute::VisitCallExpression(CallExpression* pNode)

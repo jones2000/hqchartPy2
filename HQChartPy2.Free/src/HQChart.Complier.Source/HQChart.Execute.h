@@ -136,8 +136,11 @@ protected:
 	void VisitSequenceExpression(SequenceExpression* pNode);
 	Variant* VisitBinaryExpression(Node* pNode);
 	Variant* VisitCallExpression(CallExpression* pNode);
+	Variant* VisitUnaryExpression(UnaryExpression* pNode);
 	Variant* GetNodeValue(Node* pNode);
+	Variant* GetNodeValueEx(Node* pNode);
 	void VisitStatement(Statement* pNode);
+	
 
 	Variant* GetDynaInfo(long ID, Node* pNode);
 	Variant* GetDynaInfo(long lStartID, const Variant& n, Node* pNode);
@@ -155,6 +158,7 @@ protected:
 	bool ReadCallExpressionExtend(CallExpression* pCallExpression, OutVarInfo& varInfo);
 	bool ReadLogicalExpression(LogicalExpression* pLogicalExpression, OutVarInfo& varInfo);
 	bool ReadStringLiteral(StringLiteral* pStringLiteral, OutVarInfo& varInfo);
+	bool ReadUnaryExpression(UnaryExpression* pUnaryExpression, OutVarInfo& varInfo);
 	const std::wstring& GetTempVarName();
 
 	MAP_VARIANT m_mapOutVarTable;	//Êä³ö±äÁ¿

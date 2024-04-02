@@ -21,7 +21,7 @@ jones_2000@163.com
 using namespace HQChart::Complier;
 
 const int MAIN_VERSION = 1;
-const int MIN_VERSION = 1153;	//后5位是小版本号
+const int MIN_VERSION = 1156;	//后5位是小版本号
 
 
 PyObject* GetVersion(PyObject* pSelf, PyObject* args)
@@ -63,6 +63,22 @@ PyObject* AddCustomVariable(PyObject* pSelf, PyObject* args)
 	std::string strName = pstrName;
 
 	bool bResult = Py::AddCustomVariable(strName);
+
+	return PyBool_FromLong(bResult ? 1 : 0);
+}
+
+PyObject* AddCustomFunction(PyObject* pSelf, PyObject* args)
+{
+	const char* pstrName = NULL;
+	long lArgCount = 0;
+	if (!PyArg_ParseTuple(args, "sl", &pstrName, &lArgCount))
+	{
+		return PyBool_FromLong(0);
+	}
+
+	std::string strName = pstrName;
+
+	bool bResult = Py::AddCustomFunction(strName, lArgCount);
 
 	return PyBool_FromLong(bResult ? 1 : 0);
 }
@@ -132,7 +148,10 @@ static PyMethodDef HQCHART_PY_METHODS[] =
 	{ "LoadAuthorizeInfo",(PyCFunction)LoadAuthorizeInfo, METH_VARARGS, "load Authorize by key"},
 	{ "SetLog",(PyCFunction)SetLog, METH_VARARGS, "enable/disenable log out"},
 	{ "GetPyVersion", (PyCFunction)GetPyVersion, METH_NOARGS, "get build python version"},
+	// 自定义函数和变量
 	{ "AddCustomVariable", (PyCFunction)AddCustomVariable, METH_VARARGS, "add custom variable"},
+	{ "AddCustomFunction", (PyCFunction)AddCustomFunction, METH_VARARGS, "add custom function"},
+
 	{ "AddKLineData",(PyCFunction)AddKLineData, METH_VARARGS, "add klie data to cache"},
 	{ "UpdateKLineData",(PyCFunction)UpdateKLineData, METH_VARARGS, "update klie data to cache"},
 

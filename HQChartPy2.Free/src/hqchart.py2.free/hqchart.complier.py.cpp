@@ -42,6 +42,17 @@ bool AddCustomVariable(const std::string& strValue)
 	return 1;
 }
 
+bool AddCustomFunction(const std::string& strFunction, long lArgCount)
+{
+	if (strFunction.empty()) return 0;
+	std::wstring strName = UTF8ToWString(strFunction);
+
+	auto& customFun = CustomFunction::GetInstance();
+	customFun.Add(strName, lArgCount);
+
+	return 1;
+}
+
 void GetAuthorizeInfo(std::wstring& strValue)
 {
 	strValue = L"HQChartPy2ÉçÇø°æ±¾";

@@ -948,7 +948,7 @@ Variant* Execute::VisitCallExpression(CallExpression* pNode)
 	}
 	else if (CustomFunction::GetInstance().Get(strFuncName, funcItem))
 	{
-		pVariantOut = CallCustomFunction(funcItem, args, pNode);
+		pVariantOut = CallCustomFunction(funcItem, args, m_pHistoryData, pNode);
 	}
 	else
 	{
@@ -960,12 +960,12 @@ Variant* Execute::VisitCallExpression(CallExpression* pNode)
 	return pNode->GetVariantOut();
 }
 
-Variant* Execute::CallCustomFunction(const CUSTOM_FUNCTION_ITEM& funcItem, const Variant::ARRAY_CALL_ARGUMENT& args, Node* pNode)
+Variant* Execute::CallCustomFunction(const CUSTOM_FUNCTION_ITEM& funcItem, const Variant::ARRAY_CALL_ARGUMENT& args, const IHistoryData* pHistoryData, Node* pNode)
 {
 	std::vector<double> aryArgment;
 	if (funcItem._nArgCount == 0)
 	{
-		return m_pHistoryData->CallCustomFunction(funcItem._strName, aryArgment, pNode);
+		return m_pHistoryData->CallCustomFunction(funcItem._strName, aryArgment, pHistoryData, pNode);
 	}
 
 	if (args.size() != funcItem._nArgCount)
@@ -990,7 +990,7 @@ Variant* Execute::CallCustomFunction(const CUSTOM_FUNCTION_ITEM& funcItem, const
 		aryArgment.push_back(dValue);
 	}
 
-	return m_pHistoryData->CallCustomFunction(funcItem._strName, aryArgment, pNode);
+	return m_pHistoryData->CallCustomFunction(funcItem._strName, aryArgment, pHistoryData, pNode);
 }
 
 

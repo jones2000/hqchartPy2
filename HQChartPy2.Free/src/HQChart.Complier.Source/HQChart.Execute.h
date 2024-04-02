@@ -144,7 +144,7 @@ protected:
 
 	Variant* GetDynaInfo(long ID, Node* pNode);
 	Variant* GetDynaInfo(long lStartID, const Variant& n, Node* pNode);
-	Variant* CallCustomFunction(const CUSTOM_FUNCTION_ITEM& funcItem, const Variant::ARRAY_CALL_ARGUMENT& args, Node* pNode);
+	Variant* CallCustomFunction(const CUSTOM_FUNCTION_ITEM& funcItem, const Variant::ARRAY_CALL_ARGUMENT& args, const IHistoryData* pHistoryData, Node* pNode);
 	
 	void ThrowUnexpectedNode(Node* pNode);
 	void ThrowUnexpectedNode(const std::wstring& strMessage, Node* pNode);

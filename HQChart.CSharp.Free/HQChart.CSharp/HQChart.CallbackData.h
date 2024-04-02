@@ -56,7 +56,7 @@ public:
 
 	virtual Variant* GetBlockMemberCount(const ARRAY_CALL_ARGUMENT& args, Node* pNode) const;	//板块股票个数
 	virtual Variant* GetBlockCalculate(const ARRAY_CALL_ARGUMENT& args, Node* pNode) const;		//多股统计
-	virtual Variant* CallCustomFunction(const std::wstring& strName, const std::vector<double>& args, Node* pNode) const;	//自定义函数
+	virtual Variant* CallCustomFunction(const std::wstring& strName, const std::vector<double>& args, const IHistoryData* pHistoryData, Node* pNode) const;	//自定义函数
 
 	virtual bool GetIndexScript(const std::wstring& strName, const std::wstring& strCallInfo, ScriptIndex& script, Node* pNode) const;	//获取系统指标脚本
 
@@ -68,7 +68,7 @@ protected:
 
 	Variant* Invoke_GetDataByNumber(const std::wstring& strSymbol, const std::wstring& strFunctionName, long lParam, long lKCount, Node* pNode) const;
 	Variant* Invoke_GetDataByName(const std::wstring& strSymbol, const std::wstring& strFunctionName, long lKCount, Node* pNode) const;
-	Variant* Invoke_GetDataByNumbers(const std::wstring& strSymbol, const std::wstring& strFunctionName, const std::vector<double>& aryArgs, long lKCount, Node* pNode) const;
+	Variant* Invoke_GetDataByNumbers(const std::wstring& strSymbol, const std::wstring& strFunctionName, const std::vector<double>& aryArgs, long lKCount, const IHistoryData* pHistoryData, Node* pNode) const;
 	Variant* ValueResultToVariant(const HQCHART_VALUE_RESULT& result, Node* pNode, const std::wstring& strCallInfo) const;
 
 	bool GetSystemIndexScript(const std::wstring& strName, const std::wstring& strCallInfo, ScriptIndex& script, Node* pNode) const;	//获取系统指标脚本

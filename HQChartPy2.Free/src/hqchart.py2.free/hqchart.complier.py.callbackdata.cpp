@@ -426,7 +426,7 @@ bool HistoryDataCallback::PyDataToVariant(const std::wstring& strInfo, PyObject*
 	if (nType == 0)	//double 
 	{
 		PyObject* pValue = PyDict_GetItemString(pResult, "data");
-		if (!pValue) return false;
+		if (!pValue || pValue== Py_None) return false;
 		double dValue = PyFloat_AsDouble(pValue);
 		out.SetDoubleValue(dValue);
 		TRACE_DEBUG(L"[HistoryDataCallback::PyDataToVariant] strInfo. value=%.04f", strInfo.c_str(), dValue);
@@ -443,7 +443,7 @@ bool HistoryDataCallback::PyDataToVariant(const std::wstring& strInfo, PyObject*
 		for (long i = 0; i < nCount; ++i)
 		{
 			pValue = PyList_GetItem(pAryValue, i);
-			if (pValue)
+			if (pValue && Py_None!= pValue)
 			{
 				dValue = PyFloat_AsDouble(pValue);
 				aryValue[i].SetValue(dValue);
@@ -653,7 +653,7 @@ Variant* HistoryDataCallback::Invoke_GetDataByName(const std::wstring& strFuncti
 	return pVariant;
 }
 
-Variant* HistoryDataCallback::Invoke_GetDataByNumbers(const std::wstring& strFunctionName, const std::vector<double>& aryArgs) const
+Variant* HistoryDataCallback::Invoke_GetDataByNumbers(const std::wstring& strFunctionName, const std::vector<double>& aryArgs, const IHistoryData* pHistoryData) const
 {
 	if (!m_pRunConfig || !m_pRunConfig->m_pGetDataByNumbers) return NULL;
 
@@ -664,7 +664,23 @@ Variant* HistoryDataCallback::Invoke_GetDataByNumbers(const std::wstring& strFun
 		PyList_Append(pPyList, Py_BuildValue("d", aryArgs[i]));
 	}
 
-	PyObject* pArgs = PyTuple_New(7);
+	PyObject* pPyAryDate = PyList_New(0);
+	PyObject* pPyAryTime = PyList_New(0);
+	if (pHistoryData)
+	{
+		const auto& aryKLine= pHistoryData->GetData();
+		long lKDataCount = (int)aryKLine.size();
+		for (int i = 0; i < lKDataCount; ++i)
+		{
+			const auto& item = aryKLine[i];
+
+			PyList_Append(pPyAryDate, Py_BuildValue("i", item._nDate));
+			PyList_Append(pPyAryTime, Py_BuildValue("i", item._nTime));
+		}
+	}
+
+
+	PyObject* pArgs = PyTuple_New(9);
 	PyTuple_SetItem(pArgs, 0, Py_BuildValue("u", m_strSymbol.c_str()));
 	PyTuple_SetItem(pArgs, 1, Py_BuildValue("u", strFunctionName.c_str()));
 	PyTuple_SetItem(pArgs, 2, pPyList);
@@ -672,9 +688,17 @@ Variant* HistoryDataCallback::Invoke_GetDataByNumbers(const std::wstring& strFun
 	PyTuple_SetItem(pArgs, 4, Py_BuildValue("i", m_lRight));
 	PyTuple_SetItem(pArgs, 5, Py_BuildValue("i", lKCount));
 	PyTuple_SetItem(pArgs, 6, Py_BuildValue("s", m_pRunConfig->m_strGuid.c_str()));
+	PyTuple_SetItem(pArgs, 7, pPyAryDate);
+	PyTuple_SetItem(pArgs, 8, pPyAryTime);
 
 	PyCallbackFunction pyFunction(m_pRunConfig->m_pGetDataByNumbers);
 	PyObject* pResult = pyFunction.Call(pArgs);
+
+	//ÊÍ·ÅÄÚ´æ
+	Py_CLEAR(pPyList);
+	Py_CLEAR(pPyAryDate);
+	Py_CLEAR(pPyAryTime);
+	Py_CLEAR(pArgs);
 
 	Variant* pVariant = Create();
 	if (!PyDataToVariant(strFunctionName.c_str(), pResult, *pVariant)) return NULL;
@@ -713,11 +737,11 @@ Variant* HistoryDataCallback::GetBlockCalculate(const ARRAY_CALL_ARGUMENT& args,
 	return NULL;
 }
 
-Variant* HistoryDataCallback::CallCustomFunction(const std::wstring& strName, const std::vector<double>& args, Node* pNode) const
+Variant* HistoryDataCallback::CallCustomFunction(const std::wstring& strName, const std::vector<double>& args, const IHistoryData* pHistoryData, Node* pNode) const
 {
 	if (!m_pRunConfig || !m_pRunConfig->m_pGetDataByNumbers) return NULL;
 
-	return Invoke_GetDataByNumbers(strName, args);
+	return Invoke_GetDataByNumbers(strName, args, pHistoryData);
 }
 
 Variant* HistoryDataCallback::GetFinance(const ARRAY_CALL_ARGUMENT& args, Node* pNode) const

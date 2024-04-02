@@ -7,7 +7,6 @@ sys.path.append(rootPath)
 import HQChartPy2
 import platform
 import datetime
-import requests     # 网络数据下载
 import json
 
 
@@ -69,7 +68,7 @@ class IHQData(object):
     # 自定义变量
     def GetCustomVariable(self,symbol, period, right, kcount,jobID):
         data={ "type": 0, "data":10 }
-        return data;
+        return data
 
     def GetDataByNumber(self, symbol,funcName,id, period,right,kcount, jobID):
         if (funcName==u'FINANCE') : # 财务数据
@@ -79,7 +78,7 @@ class IHQData(object):
         else :
             return False
 
-    def GetDataByNumbers(self, symbol,funcName,args, period,right,kcount, jobID):
+    def GetDataByNumbers(self, symbol,funcName,args, period,right,kcount, jobID, aryDate, aryTime):
         if (funcName==u"GPJYVALUE") :
             return self.GetGPJYValue(symbol, args, period, right, kcount, jobID)
         pass
@@ -218,18 +217,23 @@ class FastHQChart :
     # 添加外部自定义变量
     @staticmethod 
     def AddCustomVariable(varName) :
-        return HQChartPy2.AddCustomVariable(varName);
+        return HQChartPy2.AddCustomVariable(varName)
+    
+    # 添加外部自定义函数
+    @staticmethod
+    def AddCustomFunction(strFunction, lArgCount) :
+        return HQChartPy2.AddCustomFunction(strFunction, lArgCount)
 
     
     # 缓存K线数据
     @staticmethod
     def AddKLineData(data):
-        return HQChartPy2.AddKLineData(data);
+        return HQChartPy2.AddKLineData(data)
 
     # 更新缓存K线数据 只能更新最新一条数据和新的数据,历史数据不支持修改
     @staticmethod
     def UpdateKLineData(data):
-        return HQChartPy2.UpdateKLineData(data);
+        return HQChartPy2.UpdateKLineData(data)
 
     @staticmethod
     def Run(jsonConfig, hqData, proSuccess=None,procFailed=None):
@@ -252,33 +256,7 @@ class FastHQChart :
         bResult=HQChartPy2.Run(jsonConfig,callbackConfig)
         return bResult
 
-    # 获取试用注册码(商用版)
+    # 获取注册码(商用版)
     @staticmethod
-    def GetTrialAuthorize(mac, url="http://py2.hqchart.cn:8712/api/v1/CreateAuthorize"):
-
-        headers = {
-            "Content-Type": "application/json; charset=UTF-8"
-        }
-
-        postData = { "MAC":mac, "Version":"hqchartPy" }
-        print('[FastHQChart::GetTrialAuthorize] 获取试用账户',url, postData)
-
-        try:
-            response=requests.post(url,data=json.dumps(postData),headers=headers)
-            if (response.status_code!=200) :
-                print("获取测试账户请求失败, {0}".format(response.text))
-                return None
-            jsonData=response.json()
-            if (jsonData['code']==0) :
-                if ('message' in jsonData.keys()):
-                    if (jsonData['message']!=None) :
-                        print(jsonData['message'])
-                return jsonData['key']
-        except requests.exceptions.HTTPError as http_err:
-            print("获取测试账户请求异常,{0}".format(http_err))
-        except Exception as err:
-            print("获取测试账户请求异常,{0}".format(err))
-        except :
-            print("获取测试账户请求异常")
-
+    def GetTrialAuthorize(mac, url):
         return None

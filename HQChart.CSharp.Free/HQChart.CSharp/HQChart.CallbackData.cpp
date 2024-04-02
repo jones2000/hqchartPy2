@@ -228,7 +228,7 @@ Variant* HistoryDataCallback::Invoke_GetDataByNumber(const std::wstring& strSymb
 	return ValueResultToVariant(result, pNode, strCallInfo);
 }
 
-Variant* HistoryDataCallback::Invoke_GetDataByNumbers(const std::wstring& strSymbol, const std::wstring& strFunctionName, const std::vector<double>& aryArgs, long lKCount, Node* pNode) const
+Variant* HistoryDataCallback::Invoke_GetDataByNumbers(const std::wstring& strSymbol, const std::wstring& strFunctionName, const std::vector<double>& aryArgs, long lKCount, const IHistoryData* pHistoryData, Node* pNode) const
 {
 	if (!m_pRunConfig || !m_pRunConfig->m_pGetDataByNumbers)
 	{
@@ -532,10 +532,10 @@ Variant* HistoryDataCallback::GetFinance(const ARRAY_CALL_ARGUMENT& args, Node* 
 	return pResult;
 }
 
-Variant* HistoryDataCallback::CallCustomFunction(const std::wstring& strName, const std::vector<double>& args, Node* pNode) const
+Variant* HistoryDataCallback::CallCustomFunction(const std::wstring& strName, const std::vector<double>& args, const IHistoryData* pHistoryData, Node* pNode) const
 {
 	long lKCount = GetKCount();
-	Variant* pResult = Invoke_GetDataByNumbers(m_strSymbol, strName, args, lKCount, pNode);
+	Variant* pResult = Invoke_GetDataByNumbers(m_strSymbol, strName, args, lKCount, pHistoryData, pNode);
 	return pResult;
 }
 

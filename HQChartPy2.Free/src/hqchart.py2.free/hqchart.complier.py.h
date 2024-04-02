@@ -32,6 +32,7 @@ bool LoadAuthorizeInfo(const std::string& strEncrypted);
 void GetAuthorizeInfo(std::wstring& strValue);
 bool AddSystemIndex(PyObject* pConfig);
 bool AddCustomVariable(const std::string& strValue);
+bool AddCustomFunction(const std::string& strFunction, long lArgCount);
 
 }
 }

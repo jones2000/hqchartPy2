@@ -75,6 +75,9 @@
     <ClInclude Include="..\HQChart.Complier.Source\HQChart.Log.h">
       <Filter>HQChart.Complier.Source</Filter>
     </ClInclude>
+    <ClInclude Include="..\HQChart.Complier.Source\HQChart.BlockScriptResultCache.h">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -151,6 +154,12 @@
     </ClCompile>
     <ClCompile Include="HQChart.Run.cpp">
       <Filter>RunConfig</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.BlockCall.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HQChart.Complier.Source\HQChart.BlockScriptResultCache.cpp">
+      <Filter>HQChart.Complier.Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

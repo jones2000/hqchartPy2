@@ -928,6 +928,10 @@ Variant* VariantOperator::CallFunction(const std::wstring& strFuncName, const AR
 	else if (SWITCH_CALL_FUNCTIONS(L"VARCAT", 2)) return VARCAT(*args[0], *args[1]);
 	else if (SWITCH_CALL_FUNCTIONS(L"STRSPACE", 1)) return STRSPACE(*args[0]);
 
+	//板块统计
+	else if (SWITCH_CALL_FUNCTIONS(L"RANK", 3)) return RANK(*args[0], *args[1], *args[2], pHistoryData, pNode);
+	else if (SWITCH_CALL_FUNCTIONS(L"RANK2", 3)) return RANK2(*args[0], *args[1], *args[2], pHistoryData, pNode);
+
 	//指标调用
 	else if (SWITCH_CALL_FUNCTIONS(L"CALCSTOCKINDEX", 3)) return CALCSTOCKINDEX(*args[0], *args[1], *args[2], pHistoryData, pNode);
 	else if (strFuncName == L"STKINDI") return STKINDI(args, pHistoryData, pNode);

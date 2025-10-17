@@ -26,6 +26,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <memory>
 
 /* 使用std::max / std::min
 #ifndef MAX_LOCAL
@@ -97,6 +98,50 @@ struct INVOKE_INDEX_ITEM
 
 	long _lPeriod=-1;			//周期
 	long _lRight=-1;
+};
+
+//板块数据 值
+struct BLOCK_RESULT_CELL
+{
+	double _dValue = -1;
+	bool _bVaild = false;	//是否有效
+};
+
+//板块中一个股票的数据
+struct BLOCK_RESULT_ROW
+{
+	typedef std::shared_ptr< BLOCK_RESULT_ROW> REF_PTR;
+
+	typedef std::vector<BLOCK_RESULT_CELL>  ARY_CELL;	//一行的数据
+
+	std::wstring _strSymbol;
+	ARY_CELL _aryData;
+};
+
+
+class BlockScriptResult
+{
+public:
+	
+	typedef std::vector<BLOCK_RESULT_ROW::REF_PTR> ARY_ROW;
+
+	BlockScriptResult();
+	~BlockScriptResult();
+
+	bool Inital(const std::vector<std::wstring>& arySymbol, long lDataCount);
+
+	BLOCK_RESULT_ROW::REF_PTR GetRow(long lRow);
+
+	bool GetRankResult(const std::wstring& strSymbol, long lOrderType, Variant* pVarOut);	//获取排名  lOrderType 0= 升 1=降
+	bool GetMaxResult(const std::wstring& strSymbol, Variant* pVarOut);	//获取最大
+	bool GetMinResult(const std::wstring& strSymbol, Variant* pVarOut);	//获取最小
+	bool GetSumResult(const std::wstring& strSymbol, Variant* pVarOut);	//和
+	bool GetAverageResult(const std::wstring& strSymbol, Variant* pVarOut);	//均值
+	bool GetMedianResult(const std::wstring& strSymbol, Variant* pVarOut);	//中位数
+
+private:
+	ARY_ROW m_aryData;
+	long m_lKDataCount = 0;
 };
 
 //调用的指标信息
@@ -188,6 +233,8 @@ public:
 
 	bool IFC(const Variant& data);
 	bool TESTSKIP(const Variant& data);
+
+	static long  StringSplitV2(const std::wstring& str, const std::wstring& strPattern, std::vector<std::wstring>& aryValue);
 	
 private:
 
@@ -254,6 +301,9 @@ private:
 	static void Or(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& left, const ARRAY_DOUBLE& right);
 	static void Or(ARRAY_DOUBLE& dest, double dLeft, const ARRAY_DOUBLE& right);
 	static void Or(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& left, double dRight);
+
+
+	
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//内置函数
@@ -427,6 +477,13 @@ private:
 	bool ExecuteIndex(const InvokeIndex& index, Execute* pExec, HQChart::Complier::IHistoryData* pHistoryData, Node* pNode);
 	INVOKE_INDEX_ITEM GetFunctionInfo(const std::wstring& str, const IHistoryData* pHistoryData);
 	bool IsVaildPeriod(long lPeriod, long lIndexPeriod) const;
+
+
+	Variant* RANK(const Variant& block, const Variant& code, const Variant& orderType, const IHistoryData* pHistoryData, Node* pNode);
+	Variant* RANK2(const Variant& block, const Variant& code, const Variant& dataType, const IHistoryData* pHistoryData, Node* pNode);
+	bool CallBlockScript(const std::wstring& strCode, const std::wstring& strBlockID, const std::wstring& strSymbol, BlockScriptResult& result, const IHistoryData* pHistoryData, Node* pNode);
+	BlockScriptResult* CallBlockScriptV2(const std::wstring& strCode, const std::wstring& strBlockID, const std::wstring& strSymbol, const IHistoryData* pHistoryData, Node* pNode);
+	void BuildBlockScriptKey(const InvokeIndex& indexInfo, std::vector<std::wstring>& arySymbol, std::wstring& strOutKey);
 
 	//绘图函数
 	Variant* CallDrawFunction(const std::wstring& strFuncName, const ARRAY_CALL_ARGUMENT& args, const IHistoryData* pHistoryData, Node* pNode);
@@ -651,6 +708,7 @@ private:
 	static void BARSSINCEN(ARRAY_DOUBLE& dest, const ARRAY_DOUBLE& data, long n);
 
 	static std::vector<std::wstring>  StringSplit(const std::wstring& str, const std::wstring& strPattern);
+	
 	
 };
 

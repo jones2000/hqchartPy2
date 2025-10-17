@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33027.164
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hqchart.csharp", "hqchart.csharp.vcxproj", "{73285276-166C-4B42-B7A5-3DB2D399E9E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HQChart.CSharp.Test", "..\HQChart.CSharp.Test\HQChart.CSharp.Test.csproj", "{6A150365-594D-4EE2-ACFC-E2D89408B06F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HQChart.CSharp.CPlusDemo", "..\HQChart.CSharp.CPlusDemo\HQChart.CSharp.CPlusDemo.vcxproj", "{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}"
+	ProjectSection(ProjectDependencies) = postProject
+		{73285276-166C-4B42-B7A5-3DB2D399E9E4} = {73285276-166C-4B42-B7A5-3DB2D399E9E4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +44,18 @@ Global
 		{6A150365-594D-4EE2-ACFC-E2D89408B06F}.Release|x64.Build.0 = Release|Any CPU
 		{6A150365-594D-4EE2-ACFC-E2D89408B06F}.Release|x86.ActiveCfg = Release|Any CPU
 		{6A150365-594D-4EE2-ACFC-E2D89408B06F}.Release|x86.Build.0 = Release|Any CPU
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Debug|Any CPU.Build.0 = Debug|x64
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Debug|x64.ActiveCfg = Debug|x64
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Debug|x64.Build.0 = Debug|x64
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Debug|x86.ActiveCfg = Debug|Win32
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Debug|x86.Build.0 = Debug|Win32
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Release|Any CPU.ActiveCfg = Release|x64
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Release|Any CPU.Build.0 = Release|x64
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Release|x64.ActiveCfg = Release|x64
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Release|x64.Build.0 = Release|x64
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Release|x86.ActiveCfg = Release|Win32
+		{214D31A4-E18F-55DD-D97C-3B3EBF1CB731}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -544,7 +544,7 @@ Variant* VariantOperator::IFF(const Variant& data, const Variant& trueData, cons
 				}
 				else
 				{
-					if (i<trueData.m_aryValue.size())
+					if (i<(int)trueData.m_aryValue.size())
 						dest[i] = trueData.m_aryValue[i];
 				}
 			}
@@ -556,7 +556,7 @@ Variant* VariantOperator::IFF(const Variant& data, const Variant& trueData, cons
 				}
 				else
 				{
-					if (i<falseData.m_aryValue.size())
+					if (i<(int)falseData.m_aryValue.size())
 						dest[i] = falseData.m_aryValue[i];
 				}
 			}

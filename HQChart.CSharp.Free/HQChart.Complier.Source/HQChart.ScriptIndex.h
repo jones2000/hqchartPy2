@@ -19,18 +19,27 @@ namespace HQChart { namespace Complier {
 
 struct ARGUMENT_ITEM
 {
-	ARGUMENT_ITEM() :_dValue(0)
+	ARGUMENT_ITEM() :_dValue(0), _lValueType(0)
 	{
+
 	}
 
 	ARGUMENT_ITEM(const std::wstring& strName, double dValue)
-		:_strName(strName), _dValue(dValue)
+		:_strName(strName), _dValue(dValue), _lValueType(0)
+	{
+
+	}
+
+	ARGUMENT_ITEM(const std::wstring& strName, const std::wstring& strValue)
+		:_strName(strName), _dValue(0), _strValue(strValue), _lValueType(1)
 	{
 
 	}
 
 	std::wstring	_strName;
 	double			_dValue;
+	std::wstring	_strValue;	
+	long			_lValueType;	//0=double 1=string
 };
 
 

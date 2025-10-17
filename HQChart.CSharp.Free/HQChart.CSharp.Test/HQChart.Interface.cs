@@ -184,13 +184,31 @@ namespace HQChart.Interface
     }
 
 
+    [StructLayoutAttribute(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+    public struct ARG_ARRAY_ITEM
+    {
+        public double _dValue;
+        public int _lType;
+    }
+
+
+    [StructLayoutAttribute(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+    public struct FUNCTION_ARG_ITEM
+    {
+        public int _lType;                  //0=单值 1=数组			
+        public double _dValue;               //单值
+        public System.IntPtr _pAryValue;    //数组 PARG_ARRAY_ITEM
+        public long _lCount;				//数组长度
+    }
+
+
     [StructLayoutAttribute(LayoutKind.Sequential,Pack = 1)]
     public struct CUSTOM_FUNCTION_ARGUMENT
     {
 
         /// double[20]
         [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 20, ArraySubType = UnmanagedType.R8)]
-        public double[] _dValue;
+        public FUNCTION_ARG_ITEM[] _dValue;
 
         /// int
         public int _lCount;

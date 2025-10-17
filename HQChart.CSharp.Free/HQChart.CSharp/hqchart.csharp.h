@@ -63,9 +63,25 @@ typedef struct tagHQChartValueResult
 	wchar_t* _pszError;
 }HQCHART_VALUE_RESULT, * PHQCHART_VALUE_RESULT;
 
+//自定义函数 入参
+typedef struct tagArgArrayItem
+{
+	double	_dValue;
+	long	_lType;		//0=NULL, 1=有效数  
+}ARG_ARRAY_ITEM, * PARG_ARRAY_ITEM;
+
+typedef struct tagFunctionArgItem
+{
+	int _lType;		//0=单值 1=数组			
+	double _dValue;				//单值
+	PARG_ARRAY_ITEM _pAryValue;	//数组
+	long _lCount;				//数组长度
+}FUNCTION_ARG_ITEM, * PFUNCTION_ARG_ITEM;
+
+
 typedef struct tagCustomFunctionArgment
 {
-	double	_dValue[20];
+	FUNCTION_ARG_ITEM	_Args[20];	//最多支持20个入参
 	int		_lCount;
 }CUSTOM_FUNCTION_ARGUMENT, * PCUSTOM_FUNCTION_ARGUMENT;
 

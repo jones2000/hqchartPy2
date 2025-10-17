@@ -938,7 +938,7 @@ Variant* HistoryDataCache::GetCustomValue(const std::wstring& strName, Node* pNo
 	return NULL;
 }
 
-Variant* HistoryDataCache::CallCustomFunction(const std::wstring& strName, const std::vector<double>& args, const IHistoryData* pHistoryData, Node* pNode) const
+Variant* HistoryDataCache::CallCustomFunction(const std::wstring& strName, const ARRAY_CALL_ARGUMENT& args, const IHistoryData* pHistoryData, Node* pNode) const
 {
 	std::wstringstream strDescription;
 	strDescription << L"º¯Êý²»´æÔÚ. name=" << strName;

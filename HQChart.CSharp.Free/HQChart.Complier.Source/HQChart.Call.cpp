@@ -245,6 +245,28 @@ std::vector<std::wstring>  VariantOperator::StringSplit(const std::wstring& str,
 	};
 }
 
+long VariantOperator::StringSplitV2(const std::wstring& strSrc, const std::wstring& strSplit, std::vector<std::wstring>& aryValue)
+{
+	aryValue.clear();
+	if (strSplit.empty()) return 0;
+
+	std::wstring str = strSrc + strSplit;
+	//在字符串末尾也加入分隔符，方便截取最后一段
+	size_t pos = str.find(strSplit);
+	std::wstring strTemp;
+	while (pos != std::wstring::npos)
+	{
+		strTemp = str.substr(0, pos);
+		aryValue.push_back(strTemp);
+
+		//去掉已分割的字符串,在剩下的字符串中进行分割
+		str = str.substr(pos + 1, str.size());
+		pos = str.find(strSplit);
+	}
+
+	return (long)aryValue.size();
+}
+
 
 //指标引用.
 //用法:CALCSTOCKINDEX(品种代码, 指标名称, 指标线), 返回该指标相应输出的计算值.
@@ -690,6 +712,8 @@ Variant* VariantOperator::RPCCall(const Variant::ARRAY_CALL_ARGUMENT& args, cons
 
 	return pResult;
 }
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 //

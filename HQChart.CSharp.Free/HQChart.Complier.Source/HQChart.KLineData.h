@@ -148,7 +148,7 @@ public:
 	virtual Variant* GetKDataItem(const ARRAY_KDATA& aryData, const std::wstring& strVarName) const = 0;
 
 	virtual Variant* GetCustomValue(const std::wstring& strName, Node* pNode) const = 0;
-	virtual Variant* CallCustomFunction(const std::wstring& strName, const std::vector<double>& args, const IHistoryData* pHistoryData, Node* pNode) const = 0;
+	virtual Variant* CallCustomFunction(const std::wstring& strName, const ARRAY_CALL_ARGUMENT& args, const IHistoryData* pHistoryData, Node* pNode) const = 0;
 
 	virtual const HISTORY_ITEM* GetKItem(int nIndex) const = 0;	//获取索引对应的K线数据
 	virtual long GetKCount() const = 0;
@@ -159,6 +159,8 @@ public:
 
 	virtual Variant* GetBlockMemberCount(const ARRAY_CALL_ARGUMENT& args, Node* pNode) const = 0;	//板块股票个数
 	virtual Variant* GetBlockCalculate(const ARRAY_CALL_ARGUMENT& args, Node* pNode) const =0 ;		//多股统计
+	virtual bool GetBlockMember(const std::wstring& strBlockID, long lDate, std::vector<std::wstring>& arySymbol, Node* pNode) const = 0;	//获取板块成员
+	
 
 	//其他行情数据
 	virtual Variant* GetFinance(const ARRAY_CALL_ARGUMENT& args, Node* pNode) const = 0;	//财务数据
@@ -377,7 +379,7 @@ public:
 	virtual Variant* GetAdvance() const;
 	virtual Variant* GetDecline() const;
 	virtual Variant* GetCustomValue(const std::wstring& strName, Node* pNode) const;
-	virtual Variant* CallCustomFunction(const std::wstring& strName, const std::vector<double>& args, const IHistoryData* pHistoryData, Node* pNode) const;
+	virtual Variant* CallCustomFunction(const std::wstring& strName, const ARRAY_CALL_ARGUMENT& args, const IHistoryData* pHistoryData, Node* pNode) const;
 	virtual const ARRAY_KDATA* GetKData(const std::wstring& strSymbol, long lPeriod, long lRight) const;
 	virtual Variant* GetKDataItem(const ARRAY_KDATA& aryData, const std::wstring& strVarName) const;
 

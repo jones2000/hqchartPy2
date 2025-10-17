@@ -228,7 +228,7 @@ Variant* HistoryDataCallback::Invoke_GetDataByNumber(const std::wstring& strSymb
 	return ValueResultToVariant(result, pNode, strCallInfo);
 }
 
-Variant* HistoryDataCallback::Invoke_GetDataByNumbers(const std::wstring& strSymbol, const std::wstring& strFunctionName, const std::vector<double>& aryArgs, long lKCount, const IHistoryData* pHistoryData, Node* pNode) const
+Variant* HistoryDataCallback::Invoke_GetDataByNumbers(const std::wstring& strSymbol, const std::wstring& strFunctionName, const ARRAY_CALL_ARGUMENT& args, long lKCount, const IHistoryData* pHistoryData, Node* pNode) const
 {
 	if (!m_pRunConfig || !m_pRunConfig->m_pGetDataByNumbers)
 	{
@@ -239,8 +239,8 @@ Variant* HistoryDataCallback::Invoke_GetDataByNumbers(const std::wstring& strSym
 	}
 
 	CUSTOM_FUNCTION_ARGUMENT argument = { 0 };
-	long lArgumentCount = (long)aryArgs.size();
-	if (lArgumentCount > ARRAYSIZE(argument._dValue))
+	long lArgumentCount = (long)args.size();
+	if (lArgumentCount > ARRAYSIZE(argument._Args))
 	{
 		std::wstringstream strDescription;
 		strDescription << strFunctionName << L": ²ÎÊý´íÎó.";
@@ -249,9 +249,40 @@ Variant* HistoryDataCallback::Invoke_GetDataByNumbers(const std::wstring& strSym
 	}
 
 	argument._lCount = lArgumentCount;
-	for (int i = 0; i < (int)aryArgs.size(); ++i)
+	long lType = 0;
+	std::vector<REF_ARRAY_ARG_VALUE> aryCache;
+	for (int i = 0; i < (int)args.size(); ++i)
 	{
-		argument._dValue[i] = aryArgs[i];
+		const auto& item = args[i];
+		auto& destItem = argument._Args[i];
+		lType = item->GetType();
+		if (lType == Variant::DOUBLE_TYPE)
+		{
+			destItem._lType = lType;
+			destItem._dValue = item->GetDoubleValue();
+		}
+		else if (lType == Variant::ARRAY_DOUBLE_TYPE)
+		{
+			destItem._lType = lType;
+			REF_ARRAY_ARG_VALUE pRef = REF_ARRAY_ARG_VALUE(new ARRAY_ARG_VALUE());
+			const auto& aryValue = item->GetArrayValue();
+			for (int i = 0; i < (int)aryValue.size(); ++i)
+			{
+				const auto& subItem = aryValue[i];
+				ARG_ARRAY_ITEM valueItem = { 0 };
+
+				valueItem._lType = subItem._sType;
+				valueItem._dValue = subItem._dValue;
+				pRef->push_back(valueItem);
+			}
+
+			if (!pRef->empty())
+			{
+				aryCache.push_back(pRef);
+				destItem._lCount = (long)pRef->size();
+				destItem._pAryValue = &(*pRef)[0];
+			}
+		}
 	}
 
 	HQCHART_VALUE_RESULT result = { 0 };
@@ -532,7 +563,7 @@ Variant* HistoryDataCallback::GetFinance(const ARRAY_CALL_ARGUMENT& args, Node* 
 	return pResult;
 }
 
-Variant* HistoryDataCallback::CallCustomFunction(const std::wstring& strName, const std::vector<double>& args, const IHistoryData* pHistoryData, Node* pNode) const
+Variant* HistoryDataCallback::CallCustomFunction(const std::wstring& strName, const ARRAY_CALL_ARGUMENT& args, const IHistoryData* pHistoryData, Node* pNode) const
 {
 	long lKCount = GetKCount();
 	Variant* pResult = Invoke_GetDataByNumbers(m_strSymbol, strName, args, lKCount, pHistoryData, pNode);
@@ -621,6 +652,11 @@ bool HistoryDataCallback::GetIndexScript(const std::wstring& strName, const std:
 	}
 
 	return true;
+}
+
+bool HistoryDataCallback::GetBlockMember(const std::wstring& strBlockID, long lDate, std::vector<std::wstring>& arySymbol, Node* pNode) const
+{
+	return false;
 }
 
 Variant* HistoryDataCallback::GetExchange(Node* pNode) const

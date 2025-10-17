@@ -17,6 +17,7 @@
 #include <list>
 #include <sstream>
 #include <ctime>
+#include "HQChart.BlockScriptResultCache.h"
 
 
 
@@ -40,6 +41,8 @@ Execute::Execute()
 
 void Execute::SetProgram(const Program* program)
 {
+	BlockScriptResultCache::GetInstance();
+
 	m_pProgram = program;
 }
 
@@ -965,7 +968,7 @@ Variant* Execute::CallCustomFunction(const CUSTOM_FUNCTION_ITEM& funcItem, const
 	std::vector<double> aryArgment;
 	if (funcItem._nArgCount == 0)
 	{
-		return m_pHistoryData->CallCustomFunction(funcItem._strName, aryArgment, pHistoryData, pNode);
+		return m_pHistoryData->CallCustomFunction(funcItem._strName, args, pHistoryData, pNode);
 	}
 
 	if (args.size() != funcItem._nArgCount)
@@ -976,21 +979,7 @@ Variant* Execute::CallCustomFunction(const CUSTOM_FUNCTION_ITEM& funcItem, const
 		throw error;
 	}
 
-	double dValue = 0;
-	for (const auto& item : args)
-	{
-		if (item->GetType() != Variant::DOUBLE_TYPE || !item->IsVaildDoulbe())
-		{
-			std::wstringstream strDescription;
-			strDescription << L"函数'" << funcItem._strName << L"'参数错误";
-			ExecuteExcept error(strDescription.str(), L"VariantOperator::CallCustomFunction", pNode);
-			throw error;
-		}
-		dValue = item->GetDoubleValue();
-		aryArgment.push_back(dValue);
-	}
-
-	return m_pHistoryData->CallCustomFunction(funcItem._strName, aryArgment, pHistoryData, pNode);
+	return m_pHistoryData->CallCustomFunction(funcItem._strName, args, pHistoryData, pNode);
 }
 
 
@@ -1081,8 +1070,17 @@ void Execute::InitalVarTable()
 
 	for (auto iter : m_aryArguments)
 	{
-		Variant* pVariant = m_VariantOperator.Create(iter._dValue);
-		m_mapVarTable.insert(PARI_VARIANT(iter._strName, pVariant));
+		if (iter._lValueType == 0)
+		{
+			Variant* pVariant = m_VariantOperator.Create(iter._dValue);
+			m_mapVarTable.insert(PARI_VARIANT(iter._strName, pVariant));
+		}
+		else if (iter._lValueType == 1)
+		{
+			Variant* pVariant = m_VariantOperator.Create();
+			pVariant->SetStringValue(iter._strValue);
+			m_mapVarTable.insert(PARI_VARIANT(iter._strName, pVariant));
+		}
 	}
 }
 
@@ -1186,7 +1184,7 @@ Variant* Execute::ReadColorData(const std::wstring& strName)
 	//格式为COLOR+“BBGGRR”：BB、GG、RR表示蓝色、绿色和红色的分量，每种颜色的取值范围是00-FF，采用了16进制。
 	//例如：MA5:MA(CLOSE,5)，COLOR00FFFF表示纯红色与纯绿色的混合色：COLOR808000表示淡蓝色和淡绿色的混合色。
 	bool bVaild = false;
-	for (long i = 5; i < strName.length(); ++i)
+	for (long i = 5; i < (long)strName.length(); ++i)
 	{
 		const auto& item=strName[i];
 		bVaild = (item >= L'0' && item <= L'9') || (item >= L'A' && item <= L'F');
